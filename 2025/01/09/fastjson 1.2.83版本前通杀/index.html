@@ -9,12 +9,12 @@
     <meta name="description" content="fastjson 1.2.83版本前通杀关于fastjson序列化漏洞，我们找到两个类实现了Serializable接口，一个是JSONArray，一个是JSONObject，但是都没有readObject 但是在JSONArray的父类JSON，这里(new JSONSerializer(out)).write(this);这里是会(this)的调用getter方法，然后他是由toString(">
 <meta property="og:type" content="article">
 <meta property="og:title" content="fastjson 1.2.83版本前通杀">
-<meta property="og:url" content="http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/index.html">
+<meta property="og:url" content="http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/index.html">
 <meta property="og:site_name" content="毛利小五郎">
 <meta property="og:description" content="fastjson 1.2.83版本前通杀关于fastjson序列化漏洞，我们找到两个类实现了Serializable接口，一个是JSONArray，一个是JSONObject，但是都没有readObject 但是在JSONArray的父类JSON，这里(new JSONSerializer(out)).write(this);这里是会(this)的调用getter方法，然后他是由toString(">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-01-09T10:39:24.000Z">
-<meta property="article:modified_time" content="2025-01-09T16:26:31.646Z">
+<meta property="article:modified_time" content="2025-01-09T16:33:26.693Z">
 <meta property="article:author" content="Mouri-Kogorou">
 <meta name="twitter:card" content="summary">
     
@@ -95,17 +95,17 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&text=fastjson 1.2.83版本前通杀"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&is_video=false&description=fastjson 1.2.83版本前通杀"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=fastjson 1.2.83版本前通杀&body=Check out this article: http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&name=fastjson 1.2.83版本前通杀&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&t=fastjson 1.2.83版本前通杀"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&text=fastjson 1.2.83版本前通杀"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&is_video=false&description=fastjson 1.2.83版本前通杀"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=fastjson 1.2.83版本前通杀&body=Check out this article: http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&name=fastjson 1.2.83版本前通杀&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&t=fastjson 1.2.83版本前通杀"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -241,17 +241,17 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&text=fastjson 1.2.83版本前通杀"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&is_video=false&description=fastjson 1.2.83版本前通杀"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=fastjson 1.2.83版本前通杀&body=Check out this article: http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&name=fastjson 1.2.83版本前通杀&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&t=fastjson 1.2.83版本前通杀"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&text=fastjson 1.2.83版本前通杀"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&is_video=false&description=fastjson 1.2.83版本前通杀"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=fastjson 1.2.83版本前通杀&body=Check out this article: http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=fastjson 1.2.83版本前通杀"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&name=fastjson 1.2.83版本前通杀&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/01/09/fastjson%201.2.83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&t=fastjson 1.2.83版本前通杀"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
