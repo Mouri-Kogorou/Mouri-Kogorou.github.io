@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="反序列化流程分析我们先写个demo 1234567891011121314151617181920212223242526272829public class Person implements Serializable &#123;    public String name;    public String age;    public Person()&#123;        this.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="serialize反序列化流程分析">
+<meta property="og:url" content="http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="毛利小五郎">
+<meta property="og:description" content="反序列化流程分析我们先写个demo 1234567891011121314151617181920212223242526272829public class Person implements Serializable &#123;    public String name;    public String age;    public Person()&#123;        this.">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-01-09T08:52:36.000Z">
+<meta property="article:modified_time" content="2025-01-09T08:56:56.234Z">
+<meta property="article:author" content="Mouri-Kogorou">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>serialize反序列化流程分析</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2025/01/09/Rome%E9%93%BE/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/&text=serialize反序列化流程分析"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/&title=serialize反序列化流程分析"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/&is_video=false&description=serialize反序列化流程分析"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=serialize反序列化流程分析&body=Check out this article: http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/&title=serialize反序列化流程分析"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/&title=serialize反序列化流程分析"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/&title=serialize反序列化流程分析"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/&title=serialize反序列化流程分析"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/&name=serialize反序列化流程分析&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/&t=serialize反序列化流程分析"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">反序列化流程分析</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        serialize反序列化流程分析
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Mouri-Kogorou</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-01-09T08:52:36.000Z" class="dt-published" itemprop="datePublished">2025-01-09</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="反序列化流程分析"><a href="#反序列化流程分析" class="headerlink" title="反序列化流程分析"></a>反序列化流程分析</h1><p>我们先写个demo</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">public class Person implements Serializable &#123;</span><br><span class="line">    public String name;</span><br><span class="line">    public String age;</span><br><span class="line"></span><br><span class="line">    public Person()&#123;</span><br><span class="line">        this.name = &quot;gbz&quot;;</span><br><span class="line">        this.age = &quot;22&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException &#123;</span><br><span class="line">        in.defaultReadObject();</span><br><span class="line">        java.lang.Runtime.getRuntime().exec(&quot;calc&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">public class serializetest &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception&#123;</span><br><span class="line">        Person person = new Person();</span><br><span class="line"></span><br><span class="line">        </span><br><span class="line">        FileOutputStream fileOutputStream = new FileOutputStream(&quot;gbz.ser&quot;);</span><br><span class="line">        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);</span><br><span class="line">        objectOutputStream.writeObject(person);</span><br><span class="line"></span><br><span class="line">        </span><br><span class="line">        FileInputStream fileInputStream = new FileInputStream(&quot;gbz.ser&quot;);</span><br><span class="line">        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);</span><br><span class="line">        objectInputStream.readObject();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们在readObject打个断点</p>
+<p>ObjectInputStream#readObject</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public final Object readObject()</span><br><span class="line">    throws IOException, ClassNotFoundException</span><br><span class="line">&#123;</span><br><span class="line">    if (enableOverride) &#123;</span><br><span class="line">        return readObjectOverride();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // if nested read, passHandle contains handle of enclosing object</span><br><span class="line">    int outerHandle = passHandle;</span><br><span class="line">    try &#123;</span><br><span class="line">        Object obj = readObject0(false);</span><br><span class="line">        handles.markDependency(outerHandle, passHandle);</span><br><span class="line">        ClassNotFoundException ex = handles.lookupException(passHandle);</span><br><span class="line">        if (ex != null) &#123;</span><br><span class="line">            throw ex;</span><br><span class="line">        &#125;</span><br><span class="line">        if (depth == 0) &#123;</span><br><span class="line">            vlist.doCallbacks();</span><br><span class="line">        &#125;</span><br><span class="line">        return obj;</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        passHandle = outerHandle;</span><br><span class="line">        if (closed &amp;&amp; depth == 0) &#123;</span><br><span class="line">            clear();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>他首先判断你有没有传参，我们传了gbz.ser，为false，不进入</p>
+<p>我们跟进ObjectInputStream#readObject0</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">private Object readObject0(boolean unshared) throws IOException &#123;</span><br><span class="line">    // 略去对读取模式的检查</span><br><span class="line"></span><br><span class="line">    // 读取一个字节</span><br><span class="line">    byte tc;</span><br><span class="line">    while ((tc = bin.peekByte()) == TC_RESET) &#123;</span><br><span class="line">        bin.readByte();</span><br><span class="line">        handleReset();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    depth++;</span><br><span class="line">    try &#123;</span><br><span class="line">        switch (tc) &#123;</span><br><span class="line">            case TC_NULL:</span><br><span class="line">                return readNull();</span><br><span class="line"></span><br><span class="line">            case TC_REFERENCE:</span><br><span class="line">                return readHandle(unshared);</span><br><span class="line"></span><br><span class="line">            case TC_CLASS:</span><br><span class="line">                return readClass(unshared);</span><br><span class="line"></span><br><span class="line">            case TC_CLASSDESC:</span><br><span class="line">            case TC_PROXYCLASSDESC:</span><br><span class="line">                return readClassDesc(unshared);</span><br><span class="line"></span><br><span class="line">            case TC_STRING:</span><br><span class="line">            case TC_LONGSTRING:</span><br><span class="line">                return checkResolve(readString(unshared));</span><br><span class="line"></span><br><span class="line">            case TC_ARRAY:</span><br><span class="line">                return checkResolve(readArray(unshared));</span><br><span class="line"></span><br><span class="line">            case TC_ENUM:</span><br><span class="line">                return checkResolve(readEnum(unshared));</span><br><span class="line"></span><br><span class="line">            case TC_OBJECT:</span><br><span class="line">                return checkResolve(readOrdinaryObject(unshared));</span><br><span class="line"></span><br><span class="line">            case TC_EXCEPTION:</span><br><span class="line">                IOException ex = readFatalException();</span><br><span class="line">                throw new WriteAbortedException(&quot;writing aborted&quot;, ex);</span><br><span class="line"></span><br><span class="line">            case TC_BLOCKDATA:</span><br><span class="line">            case TC_BLOCKDATALONG:</span><br><span class="line">                // 略</span><br><span class="line">            case TC_ENDBLOCKDATA:</span><br><span class="line">                // 略</span><br><span class="line"></span><br><span class="line">            default:</span><br><span class="line">                throw new StreamCorruptedException(</span><br><span class="line">                    String.format(&quot;invalid type code: %02X&quot;, tc));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        depth--;</span><br><span class="line">        bin.setBlockDataMode(oldMode);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>bin是一个工具箱，bin.peekByte()读取下一个字节，我们一开始会读到TC_OBJECT</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">case TC_OBJECT:</span><br><span class="line">    return checkResolve(readOrdinaryObject(unshared));</span><br></pre></td></tr></table></figure>
+
+<p>我们进入ObjectInputStream#readOrdinaryObject</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">private Object readOrdinaryObject(boolean unshared)</span><br><span class="line">    throws IOException</span><br><span class="line">&#123;</span><br><span class="line">    if (bin.readByte() != TC_OBJECT) &#123;</span><br><span class="line">        throw new InternalError();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ObjectStreamClass desc = readClassDesc(false);</span><br><span class="line">    desc.checkDeserialize();</span><br><span class="line"></span><br><span class="line">    Class&lt;?&gt; cl = desc.forClass();</span><br><span class="line">    if (cl == String.class || cl == Class.class</span><br><span class="line">            || cl == ObjectStreamClass.class) &#123;</span><br><span class="line">        throw new InvalidClassException(&quot;invalid class descriptor&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Object obj;</span><br><span class="line">    try &#123;</span><br><span class="line">        obj = desc.isInstantiable() ? desc.newInstance() : null;</span><br><span class="line">    &#125; catch (Exception ex) &#123;</span><br><span class="line">        throw (IOException) new InvalidClassException(</span><br><span class="line">            desc.forClass().getName(),</span><br><span class="line">            &quot;unable to create instance&quot;).initCause(ex);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    passHandle = handles.assign(unshared ? unsharedMarker : obj);</span><br><span class="line">    ClassNotFoundException resolveEx = desc.getResolveException();</span><br><span class="line">    if (resolveEx != null) &#123;</span><br><span class="line">        handles.markException(passHandle, resolveEx);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (desc.isExternalizable()) &#123;</span><br><span class="line">        readExternalData((Externalizable) obj, desc);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        readSerialData(obj, desc);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    handles.finish(passHandle);</span><br><span class="line"></span><br><span class="line">    if (obj != null &amp;&amp;</span><br><span class="line">        handles.lookupException(passHandle) == null &amp;&amp;</span><br><span class="line">        desc.hasReadResolveMethod())</span><br><span class="line">    &#123;</span><br><span class="line">        Object rep = desc.invokeReadResolve(obj);</span><br><span class="line">        if (unshared &amp;&amp; rep.getClass().isArray()) &#123;</span><br><span class="line">            rep = cloneArray(rep);</span><br><span class="line">        &#125;</span><br><span class="line">        if (rep != obj) &#123;</span><br><span class="line">            handles.setObject(passHandle, obj = rep);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return obj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一开始看你是不是Object，不是就报错，然后我们跟进ObjectInputStream#readClassDesc</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">private ObjectStreamClass readClassDesc(boolean unshared)</span><br><span class="line">    throws IOException</span><br><span class="line">&#123;</span><br><span class="line">    byte tc = bin.peekByte();</span><br><span class="line">    switch (tc) &#123;</span><br><span class="line">        case TC_NULL:</span><br><span class="line">            return (ObjectStreamClass) readNull();</span><br><span class="line"></span><br><span class="line">        case TC_REFERENCE:</span><br><span class="line">            return (ObjectStreamClass) readHandle(unshared);</span><br><span class="line"></span><br><span class="line">        case TC_PROXYCLASSDESC:</span><br><span class="line">            return readProxyDesc(unshared);</span><br><span class="line"></span><br><span class="line">        case TC_CLASSDESC:</span><br><span class="line">            return readNonProxyDesc(unshared);</span><br><span class="line"></span><br><span class="line">        default:</span><br><span class="line">            throw new StreamCorruptedException(</span><br><span class="line">                String.format(&quot;invalid type code: %02X&quot;, tc));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>他会读取下一个字节是什么，TC_NULL为空，TC_REFERENCE这个就是你之前有过反序列化的东西，</p>
+<p>TC_PROXYCLASSDESC 反序列化过程中遇到代理类，TC_CLASSDESC 是表示 普通类的描述符，我们会进入TC_CLASSDESC</p>
+<p>跟进ObjectInputStream#readNonProxyDesc</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> ObjectStreamClass <span class="title function_">readNonProxyDesc</span><span class="params">(<span class="type">boolean</span> unshared)</span></span><br><span class="line">    <span class="keyword">throws</span> IOException</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (bin.readByte() != TC_CLASSDESC) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">InternalError</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">ObjectStreamClass</span> <span class="variable">desc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectStreamClass</span>();</span><br><span class="line">    <span class="type">int</span> <span class="variable">descHandle</span> <span class="operator">=</span> handles.assign(unshared ? unsharedMarker : desc);</span><br><span class="line">    passHandle = NULL_HANDLE;</span><br><span class="line"></span><br><span class="line">    <span class="type">ObjectStreamClass</span> <span class="variable">readDesc</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        readDesc = readClassDescriptor();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (ClassNotFoundException ex) &#123;</span><br><span class="line">        <span class="keyword">throw</span> (IOException) <span class="keyword">new</span> <span class="title class_">InvalidClassException</span>(</span><br><span class="line">            <span class="string">&quot;failed to read class descriptor&quot;</span>).initCause(ex);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Class&lt;?&gt; cl = <span class="literal">null</span>;</span><br><span class="line">    <span class="type">ClassNotFoundException</span> <span class="variable">resolveEx</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    bin.setBlockDataMode(<span class="literal">true</span>);</span><br><span class="line">    <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">checksRequired</span> <span class="operator">=</span> isCustomSubclass();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> ((cl = resolveClass(readDesc)) == <span class="literal">null</span>) &#123;</span><br><span class="line">            resolveEx = <span class="keyword">new</span> <span class="title class_">ClassNotFoundException</span>(<span class="string">&quot;null class&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (checksRequired) &#123;</span><br><span class="line">            ReflectUtil.checkPackageAccess(cl);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (ClassNotFoundException ex) &#123;</span><br><span class="line">        resolveEx = ex;</span><br><span class="line">    &#125;</span><br><span class="line">    skipCustomData();</span><br><span class="line"></span><br><span class="line">    desc.initNonProxy(readDesc, cl, resolveEx, readClassDesc(<span class="literal">false</span>));</span><br><span class="line"></span><br><span class="line">    handles.finish(descHandle);</span><br><span class="line">    passHandle = descHandle;</span><br><span class="line">    <span class="keyword">return</span> desc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>先是使用readClassDescriptor()获得了我们的字段信息，然后使用resolveClass去解析。最后使用initNonProxy把刚刚的字段信息，装载成类描述符，然后返回。</p>
+<p>我们跟进ObjectInputStream#resolveClass</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">protected Class&lt;?&gt; resolveClass(ObjectStreamClass desc)</span><br><span class="line">    throws IOException, ClassNotFoundException</span><br><span class="line">&#123;</span><br><span class="line">    String name = desc.getName();</span><br><span class="line">    try &#123;</span><br><span class="line">        return Class.forName(name, false, latestUserDefinedLoader());</span><br><span class="line">    &#125; catch (ClassNotFoundException ex) &#123;</span><br><span class="line">        Class&lt;?&gt; cl = primClasses.get(name);</span><br><span class="line">        if (cl != null) &#123;</span><br><span class="line">            return cl;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            throw ex;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>他会forName，这里是个关键点，注意一下，如果子类重写了这个，他就会调用子类的</p>
+<p>回到readOrdinaryObject，他把信息desc获取完了就forclass(),后面就把他实例化</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if (desc.isExternalizable()) &#123;</span><br><span class="line">    readExternalData((Externalizable) obj, desc);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    readSerialData(obj, desc);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>判断一个类是否实现了 Externalizable 接口</p>
+<p>我们肯定没有就进入ObjectInputStream#readSerialData</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">private void readSerialData(Object obj, ObjectStreamClass desc)</span><br><span class="line">    throws IOException</span><br><span class="line">&#123;</span><br><span class="line">    ObjectStreamClass.ClassDataSlot[] slots = desc.getClassDataLayout();</span><br><span class="line">    for (int i = 0; i &lt; slots.length; i++) &#123;</span><br><span class="line">        ObjectStreamClass slotDesc = slots[i].desc;</span><br><span class="line"></span><br><span class="line">        if (slots[i].hasData) &#123;</span><br><span class="line">            if (obj == null || handles.lookupException(passHandle) != null) &#123;</span><br><span class="line">                defaultReadFields(null, slotDesc); // skip field values</span><br><span class="line">            &#125; else if (slotDesc.hasReadObjectMethod()) &#123;</span><br><span class="line">                SerialCallbackContext oldContext = curContext;</span><br><span class="line">                if (oldContext != null)</span><br><span class="line">                    oldContext.check();</span><br><span class="line">                try &#123;</span><br><span class="line">                    curContext = new SerialCallbackContext(obj, slotDesc);</span><br><span class="line"></span><br><span class="line">                    bin.setBlockDataMode(true);</span><br><span class="line">                    slotDesc.invokeReadObject(obj, this);</span><br><span class="line">                &#125; catch (ClassNotFoundException ex) &#123;</span><br><span class="line">                    /*</span><br><span class="line">                     * In most cases, the handle table has already</span><br><span class="line">                     * propagated a CNFException to passHandle at this</span><br><span class="line">                     * point; this mark call is included to address cases</span><br><span class="line">                     * where the custom readObject method has cons&#x27;ed and</span><br><span class="line">                     * thrown a new CNFException of its own.</span><br><span class="line">                     */</span><br><span class="line">                    handles.markException(passHandle, ex);</span><br><span class="line">                &#125; finally &#123;</span><br><span class="line">                    curContext.setUsed();</span><br><span class="line">                    if (oldContext!= null)</span><br><span class="line">                        oldContext.check();</span><br><span class="line">                    curContext = oldContext;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                /*</span><br><span class="line">                 * defaultDataEnd may have been set indirectly by custom</span><br><span class="line">                 * readObject() method when calling defaultReadObject() or</span><br><span class="line">                 * readFields(); clear it to restore normal read behavior.</span><br><span class="line">                 */</span><br><span class="line">                defaultDataEnd = false;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                defaultReadFields(obj, slotDesc);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (slotDesc.hasWriteObjectData()) &#123;</span><br><span class="line">                skipCustomData();</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                bin.setBlockDataMode(false);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            if (obj != null &amp;&amp;</span><br><span class="line">                slotDesc.hasReadObjectNoDataMethod() &amp;&amp;</span><br><span class="line">                handles.lookupException(passHandle) == null)</span><br><span class="line">            &#123;</span><br><span class="line">                slotDesc.invokeReadObjectNoData(obj);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里就看你这个类里面有几个要要反序列化的，然后每个要反序列化的有没有重新写readObject，有就调用。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slotDesc.invokeReadObject(obj, this);</span><br></pre></td></tr></table></figure>
+
+<p>他会在这里调用子类的readObject</p>
+<p>这里就调用结束了</p>
+<p>学习链接:</p>
+<p><a target="_blank" rel="noopener" href="https://chenlvtang.top/2022/09/18/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90%E5%8F%8AresolveClass/">https://chenlvtang.top/2022/09/18/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90%E5%8F%8AresolveClass/</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">反序列化流程分析</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/&text=serialize反序列化流程分析"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/&title=serialize反序列化流程分析"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/&is_video=false&description=serialize反序列化流程分析"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=serialize反序列化流程分析&body=Check out this article: http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/&title=serialize反序列化流程分析"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/&title=serialize反序列化流程分析"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/&title=serialize反序列化流程分析"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/&title=serialize反序列化流程分析"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/&name=serialize反序列化流程分析&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/&t=serialize反序列化流程分析"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2003-2025
+    Mouri-Kogorou
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/archives/">Writing</a></li><!--
+    --><!--
+      --><li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
